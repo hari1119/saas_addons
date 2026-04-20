@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_subscription_renewal_wizard_form" model="ir.ui.view">
+        <field name="name">saas.subscription.renewal.wizard.form</field>
+        <field name="model">saas.subscription.renewal.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Renew Subscription">
+                <group string="Current Subscription">
+                    <field name="subscription_id" readonly="1"/>
+                    <field name="company_id" readonly="1"/>
+                    <field name="current_plan_id" readonly="1"/>
+                    <field name="current_end_date" readonly="1"/>
+                </group>
+                <group string="Renewal Details">
+                    <field name="new_plan_id"/>
+                    <field name="new_start_date"/>
+                    <field name="new_end_date" readonly="1"/>
+                    <field name="create_invoice"/>
+                </group>
+                <group string="Notes">
+                    <field name="renewal_notes" nolabel="1" placeholder="Optional renewal notes..."/>
+                </group>
+                <footer>
+                    <button name="action_renew" type="object"
+                            string="Renew Subscription" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_saas_subscription_renewal_wizard" model="ir.actions.act_window">
+        <field name="name">Renew Subscription</field>
+        <field name="res_model">saas.subscription.renewal.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_saas_subscription"/>
+        <field name="binding_view_types">form</field>
+    </record>
+</odoo>

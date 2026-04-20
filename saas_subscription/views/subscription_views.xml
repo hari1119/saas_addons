@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══ List ════════════════════════════════════════════════════════════ -->
+    <record id="view_saas_subscription_list" model="ir.ui.view">
+        <field name="name">saas.subscription.list</field>
+        <field name="model">saas.subscription</field>
+        <field name="arch" type="xml">
+            <list string="Subscriptions"
+                  decoration-danger="state == 'expired'"
+                  decoration-warning="state == 'grace' or is_near_expiry"
+                  decoration-success="state == 'active'"
+                  decoration-info="state == 'trial'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="reference"/>
+                <field name="company_id"/>
+                <field name="type_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="days_remaining" string="Days Left"/>
+                <field name="grace_end_date"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state == 'expired'"
+                       decoration-warning="state == 'grace'"
+                       decoration-success="state == 'active'"
+                       decoration-info="state == 'trial'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="max_users"/>
+                <field name="amount" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="is_near_expiry" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ═══ Form ════════════════════════════════════════════════════════════ -->
+    <record id="view_saas_subscription_form" model="ir.ui.view">
+        <field name="name">saas.subscription.form</field>
+        <field name="model">saas.subscription</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Subscription">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_activate" type="object" string="Activate"
+                            class="btn-primary"
+                            invisible="state not in ('draft','trial')"/>
+                    <button name="%(action_saas_subscription_renewal_wizard)d" type="action"
+                            string="Renew" class="btn-secondary"
+                            invisible="state not in ('active','grace','expired')"/>
+                    <button name="action_create_invoice" type="object"
+                            string="Create Invoice" class="btn-secondary"
+                            invisible="invoice_id != False or state == 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            class="btn-danger"
+                            invisible="state in ('cancelled','expired')"
+                            confirm="Are you sure you want to cancel this subscription?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,trial,active,grace,expired"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-file-text-o"
+                                invisible="invoice_id == False"
+                                name="action_create_invoice" type="object">
+                            <span class="o_stat_text">Invoice</span>
+                        </button>
+                    </div>
+
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not is_near_expiry or state != 'active'">
+                        <strong>⚠️ Expiring Soon!</strong>
+                        This subscription expires in <field name="days_remaining" readonly="1"/> days.
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="state != 'grace'">
+                        <strong>🔴 Grace Period Active.</strong>
+                        The subscription has expired. Access is still allowed during the grace period.
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="state != 'expired'">
+                        <strong>❌ Subscription Expired.</strong>
+                        Company access is now restricted. Please renew immediately.
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="reference"/>
+                        <h1>
+                            <field name="reference" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Subscription">
+                            <field name="company_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="type_id"
+                                   readonly="state not in ('draft','trial')"/>
+                            <field name="start_date"
+                                   readonly="state not in ('draft','trial')"/>
+                            <field name="end_date"/>
+                            <field name="trial_end_date"
+                                   invisible="not trial_end_date"/>
+                        </group>
+                        <group string="Status">
+                            <field name="grace_end_date"/>
+                            <field name="days_remaining"/>
+                            <field name="is_near_expiry"/>
+                            <field name="is_expired"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Billing">
+                            <field name="amount" widget="monetary"
+                                   options="{'currency_field': 'currency_id'}"/>
+                            <field name="currency_id"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="payment_gateway" readonly="1"/>
+                            <field name="payment_reference"/>
+                            <field name="auto_renewal"/>
+                        </group>
+                        <group string="Feature Snapshot">
+                            <field name="max_users"/>
+                            <field name="max_storage_gb"/>
+                            <field name="grace_period_days"/>
+                        </group>
+                    </group>
+
+                    <group string="Notification Status">
+                        <group>
+                            <field name="notified_7days"/>
+                            <field name="notified_3days"/>
+                        </group>
+                        <group>
+                            <field name="notified_1day"/>
+                            <field name="notified_expired"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Activity Log" name="log">
+                            <field name="note" placeholder="Internal notes..."/>
+                            <separator string="Activity Log"/>
+                            <!-- <field name="env['saas.subscription.log'].search([('subscription_id','=',id)])"
+                                   invisible="1"/> -->
+                            <list create="false" edit="false" delete="false"
+                                  string="Log Entries"
+                                  domain="[('subscription_id','=',active_id)]"
+                                  model="saas.subscription.log">
+                            </list>
+                        </page>
+                        <page string="Chatter" name="chatter">
+                            <chatter/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══ Kanban ══════════════════════════════════════════════════════════ -->
+    <record id="view_saas_subscription_kanban" model="ir.ui.view">
+        <field name="name">saas.subscription.kanban</field>
+        <field name="model">saas.subscription</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1"
+                    class="o_kanban_small_column">
+                <field name="reference"/>
+                <field name="company_id"/>
+                <field name="type_id"/>
+                <field name="end_date"/>
+                <field name="days_remaining"/>
+                <field name="state"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+                <field name="is_near_expiry"/>
+                <templates>
+                    <t t-name="card">
+                        <t t-set="danger"
+                           t-value="record.state.raw_value == 'expired'"/>
+                        <t t-set="warning"
+                           t-value="record.state.raw_value == 'grace' or record.is_near_expiry.raw_value"/>
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click
+                                           #{danger ? 'border-danger' : warning ? 'border-warning' : ''}">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong><field name="reference"/></strong><br/>
+                                    <span class="text-muted">
+                                        <field name="company_id"/>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <span class="badge rounded-pill bg-primary">
+                                    <field name="type_id"/>
+                                </span><br/>
+                                <span>Expires: <field name="end_date"/></span><br/>
+                                <t t-if="record.days_remaining.raw_value >= 0">
+                                    <span t-attf-class="#{record.is_near_expiry.raw_value ? 'text-danger fw-bold' : ''}">
+                                        <field name="days_remaining"/> days left
+                                    </span>
+                                </t>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <field name="amount" widget="monetary"
+                                           options="{'currency_field': 'currency_id'}"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="state" widget="label_selection"
+                                           options="{'classes': {
+                                               'active': 'success',
+                                               'trial': 'info',
+                                               'grace': 'warning',
+                                               'expired': 'danger',
+                                               'cancelled': 'secondary',
+                                               'draft': 'secondary'
+                                           }}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ═══ Search ══════════════════════════════════════════════════════════ -->
+    <!-- <record id="view_saas_subscription_search" model="ir.ui.view">
+        <field name="name">saas.subscription.search</field>
+        <field name="model">saas.subscription</field>
+        <field name="arch" type="xml">
+            <search string="Subscriptions">
+                <field name="reference"/>
+                <field name="company_id"/>
+                <field name="type_id"/>
+                <filter name="active" string="Active"
+                        domain="[('state','=','active')]"/>
+                <filter name="trial" string="Trial"
+                        domain="[('state','=','trial')]"/>
+                <filter name="grace" string="In Grace Period"
+                        domain="[('state','=','grace')]"/>
+                <filter name="expired" string="Expired"
+                        domain="[('state','=','expired')]"/>
+                <filter name="expiring_soon" string="Expiring in 7 Days"
+                        domain="[('state','=','active'),
+                                 ('end_date','&lt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d')),
+                                 ('end_date','&gt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="auto_renewal" string="Auto-Renewal On"
+                        domain="[('auto_renewal','=',True)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_type" string="Plan"
+                            context="{'group_by': 'type_id'}"/>
+                    <filter name="group_company" string="Company"
+                            context="{'group_by': 'company_id'}"/>
+                    <filter name="group_start" string="Start Month"
+                            context="{'group_by': 'start_date:month'}"/>
+                    <filter name="group_end" string="Expiry Month"
+                            context="{'group_by': 'end_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record> -->
+
+    <!-- ═══ Log list (embedded) ═════════════════════════════════════════════ -->
+    <record id="view_saas_subscription_log_list" model="ir.ui.view">
+        <field name="name">saas.subscription.log.list</field>
+        <field name="model">saas.subscription.log</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false"
+                  string="Activity Log" default_order="create_date desc">
+                <field name="create_date" string="Date"/>
+                <field name="user_id" string="By"/>
+                <field name="message"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ═══ Actions ═════════════════════════════════════════════════════════ -->
+    <record id="action_saas_subscription" model="ir.actions.act_window">
+        <field name="name">Subscriptions</field>
+        <field name="res_model">saas.subscription</field>
+        <field name="view_mode">list,kanban,form</field>
+        <!-- <field name="search_view_id" ref="view_saas_subscription_search"/> -->
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No subscriptions yet!
+            </p>
+            <p>Assign a subscription plan to a company to get started.</p>
+        </field>
+    </record>
+
+    <record id="action_saas_subscription_expiring" model="ir.actions.act_window">
+        <field name="name">Expiring Soon</field>
+        <field name="res_model">saas.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state','=','active'),('is_near_expiry','=',True)]</field>
+        <field name="context">{'search_default_expiring_soon': 1}</field>
+    </record>
+
+    <record id="action_saas_subscription_log" model="ir.actions.act_window">
+        <field name="name">Activity Logs</field>
+        <field name="res_model">saas.subscription.log</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>

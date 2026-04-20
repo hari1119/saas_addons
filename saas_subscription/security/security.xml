@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ═══════════════════════════════════════════════════
+             Security Groups
+        ════════════════════════════════════════════════════ -->
+        <record id="module_category_saas" model="ir.module.category">
+            <field name="name">SaaS Subscription</field>
+            <field name="description">Manage SaaS subscriptions and company access control.</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- SaaS Admin: full access to everything -->
+        <record id="group_saas_admin" model="res.groups">
+            <field name="name">SaaS Administrator</field>
+            <!-- <field name="category_id" ref="saas_subscription.module_category_saas"/> -->
+            <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
+            <field name="comment">Full access to subscription management. Bypasses all subscription locks.</field>
+        </record>
+
+        <!-- SaaS Manager: manage subscriptions, view reports -->
+        <record id="group_saas_manager" model="res.groups">
+            <field name="name">SaaS Manager</field>
+            <!-- <field name="category_id" ref="saas_subscription.module_category_saas"/> -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Can manage subscriptions and view analytics.</field>
+        </record>
+
+        <!-- SaaS User: read-only access to their own subscription -->
+        <record id="group_saas_user" model="res.groups">
+            <field name="name">SaaS User</field>
+            <!-- <field name="category_id" ref="saas_subscription.module_category_saas"/> -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Record Rules -->
+        <!-- Companies can only see their own subscriptions -->
+        <record id="rule_subscription_company" model="ir.rule">
+            <field name="name">Subscription: per-company access</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_saas_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Managers see all subscriptions -->
+        <record id="rule_subscription_manager" model="ir.rule">
+            <field name="name">Subscription: manager sees all</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_saas_manager'))]"/>
+        </record>
+
+        <record id="rule_subscription_admin" model="ir.rule">
+            <field name="name">Subscription: admin sees all</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_saas_admin'))]"/>
+        </record>
+    </data>
+</odoo>

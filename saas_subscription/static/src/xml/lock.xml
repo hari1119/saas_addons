@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="saas_subscription.SubscriptionLock">
+        <!-- Empty div, just to mount the component -->
+        <div></div>
+    </t>
+</templates>

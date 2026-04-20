@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══ Root menu ════════════════════════════════════════════════════ -->
+    <menuitem id="menu_saas_root"
+              name="SaaS Subscriptions"
+              sequence="90"
+              web_icon="saas_subscription,static/description/icon.png"
+              groups="saas_subscription.group_saas_manager,saas_subscription.group_saas_admin"/>
+
+    <!-- ═══ Dashboard ════════════════════════════════════════════════════ -->
+    <menuitem id="menu_saas_dashboard"
+              name="Dashboard"
+              parent="menu_saas_root"
+              action="action_saas_dashboard"
+              sequence="10"
+              groups="saas_subscription.group_saas_manager,saas_subscription.group_saas_admin"/>
+
+    <!-- ═══ Subscriptions ════════════════════════════════════════════════ -->
+    <menuitem id="menu_saas_subscriptions"
+              name="Subscriptions"
+              parent="menu_saas_root"
+              sequence="20"
+              groups="saas_subscription.group_saas_manager,saas_subscription.group_saas_admin"/>
+
+    <menuitem id="menu_saas_subscription_all"
+              name="All Subscriptions"
+              parent="menu_saas_subscriptions"
+              action="action_saas_subscription"
+              sequence="10"/>
+
+    <menuitem id="menu_saas_subscription_expiring"
+              name="Expiring Soon"
+              parent="menu_saas_subscriptions"
+              action="action_saas_subscription_expiring"
+              sequence="20"/>
+
+    <menuitem id="menu_saas_subscription_log"
+              name="Activity Logs"
+              parent="menu_saas_subscriptions"
+              action="action_saas_subscription_log"
+              sequence="30"/>
+
+    <!-- ═══ Configuration ════════════════════════════════════════════════ -->
+    <menuitem id="menu_saas_configuration"
+              name="Configuration"
+              parent="menu_saas_root"
+              sequence="30"
+              groups="saas_subscription.group_saas_admin"/>
+
+    <menuitem id="menu_saas_plan_types"
+              name="Subscription Plans"
+              parent="menu_saas_configuration"
+              action="action_saas_subscription_type"
+              sequence="10"/>
+
+    <!-- ═══ Reporting ════════════════════════════════════════════════════ -->
+    <menuitem id="menu_saas_reporting"
+              name="Reporting"
+              parent="menu_saas_root"
+              sequence="40"
+              groups="saas_subscription.group_saas_manager,saas_subscription.group_saas_admin"/>
+
+    <menuitem id="menu_saas_report_analytics"
+              name="Subscription Analytics"
+              parent="menu_saas_reporting"
+              action="action_saas_subscription_analytics"
+              sequence="10"/>
+
+    <menuitem id="menu_saas_report_revenue"
+              name="Revenue by Plan"
+              parent="menu_saas_reporting"
+              action="action_report_saas_revenue"
+              sequence="20"/>
+
+    <menuitem id="menu_saas_report_logs"
+              name="Activity Logs"
+              parent="menu_saas_reporting"
+              action="action_report_saas_logs"
+              sequence="30"/>
+</odoo>

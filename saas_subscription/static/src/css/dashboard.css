@@ -1,0 +1,33 @@
+/* SaaS Subscription Dashboard Styles */
+
+.o_saas_dashboard {
+    background: #f8f9fa;
+    min-height: 100%;
+}
+
+.o_saas_kpi_card {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.o_saas_kpi_card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.o_saas_dashboard .card {
+    border-radius: 12px;
+}
+
+.o_saas_dashboard .card-header {
+    border-radius: 12px 12px 0 0 !important;
+    font-size: 1rem;
+}
+
+.o_saas_dashboard .progress {
+    border-radius: 8px;
+}
+
+.o_saas_dashboard h2 {
+    font-size: 1.75rem;
+}

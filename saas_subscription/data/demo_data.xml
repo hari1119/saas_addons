@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- ═══════════════════════════════════════════════
+             Demo Subscription Types
+        ════════════════════════════════════════════════ -->
+        <record id="demo_plan_basic" model="saas.subscription.type">
+            <field name="name">Basic</field>
+            <field name="plan_code">BASIC</field>
+            <field name="plan_level">basic</field>
+            <field name="duration_unit">months</field>
+            <field name="duration_value">1</field>
+            <field name="price">9.99</field>
+            <field name="max_users">3</field>
+            <field name="max_storage_gb">5</field>
+            <field name="grace_period_days">3</field>
+            <field name="trial_days">14</field>
+            <field name="color">1</field>
+        </record>
+
+        <record id="demo_plan_silver" model="saas.subscription.type">
+            <field name="name">Silver</field>
+            <field name="plan_code">SILVER</field>
+            <field name="plan_level">silver</field>
+            <field name="duration_unit">months</field>
+            <field name="duration_value">3</field>
+            <field name="price">29.99</field>
+            <field name="max_users">10</field>
+            <field name="max_storage_gb">25</field>
+            <field name="grace_period_days">7</field>
+            <field name="trial_days">14</field>
+            <field name="api_access" eval="True"/>
+            <field name="color">2</field>
+        </record>
+
+        <record id="demo_plan_gold" model="saas.subscription.type">
+            <field name="name">Gold</field>
+            <field name="plan_code">GOLD</field>
+            <field name="plan_level">gold</field>
+            <field name="duration_unit">months</field>
+            <field name="duration_value">6</field>
+            <field name="price">99.99</field>
+            <field name="max_users">50</field>
+            <field name="max_storage_gb">100</field>
+            <field name="grace_period_days">7</field>
+            <field name="api_access" eval="True"/>
+            <field name="custom_domain" eval="True"/>
+            <field name="color">3</field>
+        </record>
+
+        <record id="demo_plan_diamond" model="saas.subscription.type">
+            <field name="name">Diamond</field>
+            <field name="plan_code">DIAMOND</field>
+            <field name="plan_level">diamond</field>
+            <field name="duration_unit">years</field>
+            <field name="duration_value">1</field>
+            <field name="price">999.99</field>
+            <field name="max_users">0</field>
+            <field name="max_storage_gb">0</field>
+            <field name="grace_period_days">14</field>
+            <field name="api_access" eval="True"/>
+            <field name="custom_domain" eval="True"/>
+            <field name="priority_support" eval="True"/>
+            <field name="auto_renewal" eval="True"/>
+            <field name="color">5</field>
+        </record>
+
+        <!-- ═══════════════════════════════════════════════
+             Demo Subscriptions (for base company)
+        ════════════════════════════════════════════════ -->
+        <record id="demo_subscription_main" model="saas.subscription">
+            <field name="type_id" ref="demo_plan_gold"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="start_date" eval="(datetime.date.today()).strftime('%Y-%m-%d')"/>
+            <field name="state">active</field>
+            <field name="amount">99.99</field>
+            <field name="note">Demo Gold subscription for the main company.</field>
+        </record>
+    </data>
+</odoo>

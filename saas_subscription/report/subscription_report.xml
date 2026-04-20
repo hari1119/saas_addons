@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report action -->
+    <record id="action_report_subscription_pdf" model="ir.actions.report">
+        <field name="name">Subscription Certificate</field>
+        <field name="model">saas.subscription</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">saas_subscription.report_subscription_document</field>
+        <field name="report_file">saas_subscription.report_subscription_document</field>
+        <field name="binding_model_id" ref="model_saas_subscription"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb template -->
+    <template id="report_subscription_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center mb-4">
+                            <h1>Subscription Certificate</h1>
+                            <h3 t-field="doc.reference"/>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Company:</strong>
+                                <p t-field="doc.company_id"/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Status:</strong>
+                                <p>
+                                    <span t-attf-class="badge
+                                        #{doc.state == 'active' and 'bg-success' or
+                                          doc.state == 'trial'  and 'bg-info'    or
+                                          doc.state == 'grace'  and 'bg-warning' or
+                                          'bg-danger'}">
+                                        <t t-esc="doc.state.upper()"/>
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th colspan="2" class="text-center">Plan Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Plan</strong></td>
+                                    <td t-field="doc.type_id"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Start Date</strong></td>
+                                    <td t-field="doc.start_date"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>End Date</strong></td>
+                                    <td t-field="doc.end_date"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Grace Period End</strong></td>
+                                    <td t-field="doc.grace_end_date"/>
+                                </tr>
+                                <tr>
+                                    <td><strong>Max Users</strong></td>
+                                    <td>
+                                        <t t-if="doc.max_users == 0">Unlimited</t>
+                                        <t t-else="" t-esc="doc.max_users"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Max Storage</strong></td>
+                                    <td>
+                                        <t t-if="doc.max_storage_gb == 0">Unlimited</t>
+                                        <t t-else="">
+                                            <t t-esc="doc.max_storage_gb"/> GB
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Amount Paid</strong></td>
+                                    <td>
+                                        <t t-esc="doc.currency_id.symbol"/>
+                                        <t t-esc="doc.amount"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-4 text-center text-muted" style="font-size:11px;">
+                            Generated on <t t-esc="context_today().strftime('%Y-%m-%d')"/> •
+                            This is a system-generated document.
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

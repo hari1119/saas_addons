@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard client action -->
+    <record id="action_saas_dashboard" model="ir.actions.client">
+        <field name="name">SaaS Dashboard</field>
+        <field name="tag">saas_subscription.Dashboard</field>
+    </record>
+
+    <!-- Subscription report pivot view -->
+    <record id="view_saas_subscription_pivot" model="ir.ui.view">
+        <field name="name">saas.subscription.pivot</field>
+        <field name="model">saas.subscription</field>
+        <field name="arch" type="xml">
+            <pivot string="Subscription Analytics" sample="1">
+                <field name="type_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+                <field name="days_remaining" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Subscription report graph view -->
+    <record id="view_saas_subscription_graph" model="ir.ui.view">
+        <field name="name">saas.subscription.graph</field>
+        <field name="model">saas.subscription</field>
+        <field name="arch" type="xml">
+            <graph string="Subscription Revenue" type="bar" sample="1">
+                <field name="type_id"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Analytics action with pivot + graph -->
+    <record id="action_saas_subscription_analytics" model="ir.actions.act_window">
+        <field name="name">Analytics</field>
+        <field name="res_model">saas.subscription</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="context">{'search_default_active': 1}</field>
+    </record>
+</odoo>

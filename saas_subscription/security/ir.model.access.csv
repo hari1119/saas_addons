@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_saas_subscription_type_admin,saas.subscription.type admin,model_saas_subscription_type,saas_subscription.group_saas_admin,1,1,1,1
+access_saas_subscription_type_manager,saas.subscription.type manager,model_saas_subscription_type,saas_subscription.group_saas_manager,1,1,1,0
+access_saas_subscription_type_user,saas.subscription.type user,model_saas_subscription_type,base.group_user,1,0,0,0
+access_saas_subscription_admin,saas.subscription admin,model_saas_subscription,saas_subscription.group_saas_admin,1,1,1,1
+access_saas_subscription_manager,saas.subscription manager,model_saas_subscription,saas_subscription.group_saas_manager,1,1,1,0
+access_saas_subscription_user,saas.subscription user,model_saas_subscription,saas_subscription.group_saas_user,1,0,0,0
+access_saas_subscription_log_admin,saas.subscription.log admin,model_saas_subscription_log,saas_subscription.group_saas_admin,1,1,1,1
+access_saas_subscription_log_manager,saas.subscription.log manager,model_saas_subscription_log,saas_subscription.group_saas_manager,1,0,0,0
+access_saas_subscription_log_user,saas.subscription.log user,model_saas_subscription_log,saas_subscription.group_saas_user,1,0,0,0
+access_saas_renewal_wizard_admin,saas.renewal.wizard admin,model_saas_subscription_renewal_wizard,saas_subscription.group_saas_admin,1,1,1,1
+access_saas_renewal_wizard_manager,saas.renewal.wizard manager,model_saas_subscription_renewal_wizard,saas_subscription.group_saas_manager,1,1,1,1

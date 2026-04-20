@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 7-day warning -->
+        <record id="email_template_expiry_7days" model="mail.template">
+            <field name="name">SaaS Subscription: Expiring in 7 Days</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="subject">⚠️ Your subscription expires in 7 days – {{ object.company_id.name }}</field>
+            <field name="email_to">{{ object.company_id.partner_id.email }}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+    <div style="background: #f5a623; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">⚠️ Subscription Expiry Notice</h1>
+    </div>
+    <div style="padding: 32px;">
+        <p style="font-size: 16px;">Dear <strong>{{ object.company_id.name }}</strong>,</p>
+        <p>Your <strong>{{ object.type_id.name }}</strong> subscription (<code>{{ object.reference }}</code>) 
+           will expire on <strong>{{ object.end_date }}</strong> — that's in <strong>7 days</strong>.</p>
+        <p>After expiry, you will enter a <strong>{{ object.grace_period_days }}-day grace period</strong> 
+           before system access is restricted.</p>
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="/saas/subscription/status" 
+               style="background:#f5a623; color:white; padding:12px 28px; border-radius:6px; 
+                      text-decoration:none; font-size:16px; font-weight:bold;">
+                Renew Now
+            </a>
+        </div>
+        <p style="color: #666; font-size: 13px;">
+            If you have already renewed, please disregard this message.
+            Contact us at <a href="mailto:support@yourcompany.com">support@yourcompany.com</a>.
+        </p>
+    </div>
+</div>
+            ]]></field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- 3-day warning -->
+        <record id="email_template_expiry_3days" model="mail.template">
+            <field name="name">SaaS Subscription: Expiring in 3 Days</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="subject">🚨 URGENT: Your subscription expires in 3 days – {{ object.company_id.name }}</field>
+            <field name="email_to">{{ object.company_id.partner_id.email }}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 2px solid #e74c3c; border-radius: 8px; overflow: hidden;">
+    <div style="background: #e74c3c; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">🚨 Action Required</h1>
+    </div>
+    <div style="padding: 32px;">
+        <p style="font-size: 16px;">Dear <strong>{{ object.company_id.name }}</strong>,</p>
+        <p>Your <strong>{{ object.type_id.name }}</strong> subscription expires in <strong>3 days</strong> 
+           on <strong>{{ object.end_date }}</strong>.</p>
+        <p style="color: #e74c3c; font-weight: bold;">
+            Failure to renew will result in system access being restricted after your grace period.
+        </p>
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="/saas/subscription/status" 
+               style="background:#e74c3c; color:white; padding:12px 28px; border-radius:6px; 
+                      text-decoration:none; font-size:16px; font-weight:bold;">
+                Renew Immediately
+            </a>
+        </div>
+    </div>
+</div>
+            ]]></field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- 1-day warning -->
+        <record id="email_template_expiry_1day" model="mail.template">
+            <field name="name">SaaS Subscription: Expiring Tomorrow</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="subject">🔴 FINAL NOTICE: Subscription expires TOMORROW – {{ object.company_id.name }}</field>
+            <field name="email_to">{{ object.company_id.partner_id.email }}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 2px solid #c0392b; border-radius: 8px; overflow: hidden;">
+    <div style="background: #c0392b; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">🔴 Final Notice</h1>
+    </div>
+    <div style="padding: 32px;">
+        <p style="font-size: 16px;">Dear <strong>{{ object.company_id.name }}</strong>,</p>
+        <p>This is your <strong>final notice</strong>. Your subscription expires <strong>tomorrow</strong>.</p>
+        <p>Please renew now to avoid service interruption.</p>
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="/saas/subscription/status" 
+               style="background:#c0392b; color:white; padding:12px 28px; border-radius:6px; 
+                      text-decoration:none; font-size:16px; font-weight:bold;">
+                Renew Now
+            </a>
+        </div>
+    </div>
+</div>
+            ]]></field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Expired -->
+        <record id="email_template_expired" model="mail.template">
+            <field name="name">SaaS Subscription: Expired</field>
+            <field name="model_id" ref="model_saas_subscription"/>
+            <field name="subject">❌ Your subscription has expired – {{ object.company_id.name }}</field>
+            <field name="email_to">{{ object.company_id.partner_id.email }}</field>
+            <field name="body_html"><![CDATA[
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #bdc3c7; border-radius: 8px; overflow: hidden;">
+    <div style="background: #7f8c8d; padding: 24px; text-align: center;">
+        <h1 style="color: white; margin: 0;">Subscription Expired</h1>
+    </div>
+    <div style="padding: 32px;">
+        <p>Dear <strong>{{ object.company_id.name }}</strong>,</p>
+        <p>Your <strong>{{ object.type_id.name }}</strong> subscription expired on 
+           <strong>{{ object.end_date }}</strong> and your grace period has ended.</p>
+        <p>Your system access has been <strong>restricted</strong>. 
+           Please contact us to reactivate your account.</p>
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="mailto:support@yourcompany.com" 
+               style="background:#2c3e50; color:white; padding:12px 28px; border-radius:6px; 
+                      text-decoration:none; font-size:16px;">
+                Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+            ]]></field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

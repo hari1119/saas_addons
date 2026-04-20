@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend res.company form to show subscription info -->
+    <record id="view_res_company_form_saas" model="ir.ui.view">
+        <field name="name">res.company.form.saas.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='general_info']" position="after">
+                <page string="Subscription" name="saas_subscription">
+                    <group>
+                        <group string="Current Subscription">
+                            <field name="subscription_locked" readonly="1"/>
+                            <field name="subscription_state" readonly="1"/>
+                            <field name="current_subscription_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not subscription_locked">
+                        <strong>⚠️ Access Locked:</strong>
+                        This company's subscription is expired or inactive.
+                        Users will be blocked from logging in.
+                    </div>
+                    <div class="alert alert-success" role="alert"
+                         invisible="subscription_locked">
+                        <strong>✅ Access Active:</strong>
+                        This company has a valid subscription.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
