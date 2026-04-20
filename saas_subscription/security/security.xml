@@ -13,7 +13,7 @@
         <!-- SaaS Admin: full access to everything -->
         <record id="group_saas_admin" model="res.groups">
             <field name="name">SaaS Administrator</field>
-            <!-- <field name="category_id" ref="saas_subscription.module_category_saas"/> -->
+            <field name="category_id" ref="module_category_saas"/>
             <field name="implied_ids" eval="[(4, ref('base.group_system'))]"/>
             <field name="comment">Full access to subscription management. Bypasses all subscription locks.</field>
         </record>
@@ -21,7 +21,7 @@
         <!-- SaaS Manager: manage subscriptions, view reports -->
         <record id="group_saas_manager" model="res.groups">
             <field name="name">SaaS Manager</field>
-            <!-- <field name="category_id" ref="saas_subscription.module_category_saas"/> -->
+            <field name="category_id" ref="module_category_saas"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
             <field name="comment">Can manage subscriptions and view analytics.</field>
         </record>
@@ -29,7 +29,7 @@
         <!-- SaaS User: read-only access to their own subscription -->
         <record id="group_saas_user" model="res.groups">
             <field name="name">SaaS User</field>
-            <!-- <field name="category_id" ref="saas_subscription.module_category_saas"/> -->
+            <field name="category_id" ref="module_category_saas"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 

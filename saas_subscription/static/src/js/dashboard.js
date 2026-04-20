@@ -44,7 +44,6 @@ class SaasDashboard extends Component {
         });
     }
 
-
     openExpiring() {
         this.openSubscriptions([
             ["state", "=", "active"],

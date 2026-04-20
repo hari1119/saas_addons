@@ -20,7 +20,7 @@ Features:
 * Optional Stripe/PayPal payment integration hooks
 * Full unit test suite
     """,
-    'author': 'Your Company',
+    'author': 'Hari',
     'website': 'https://www.yourcompany.com',
     'license': 'LGPL-3',
     'depends': [
@@ -37,7 +37,7 @@ Features:
         # Data
         'data/sequence_data.xml',
         'data/email_templates.xml',
-        # 'data/cron_jobs.xml',
+        'data/cron_jobs.xml',
         # Views
         'views/subscription_type_views.xml',
         'views/subscription_views.xml',
@@ -55,12 +55,14 @@ Features:
     ],
     'assets': {
         'web.assets_backend': [
+            # Dashboard
             'saas_subscription/static/src/css/dashboard.css',
             'saas_subscription/static/src/xml/dashboard.xml',
             'saas_subscription/static/src/js/dashboard.js',
-            'saas_subscription/static/src/css/lock.css',
-            'saas_subscription/static/src/xml/lock.xml',
-            'saas_subscription/static/src/js/lock.js',
+            # Subscription lock screen — MUST load at boot, before any view
+            'saas_subscription/static/src/css/subscription_lock.css',
+            'saas_subscription/static/src/xml/subscription_lock.xml',
+            'saas_subscription/static/src/js/subscription_lock.js',
         ],
     },
     'images': ['static/description/icon.png'],

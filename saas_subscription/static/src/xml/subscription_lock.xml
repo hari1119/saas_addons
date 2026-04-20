@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+<!--
+    SubscriptionLockScreen
+    ======================
+    Rendered by the `main_components` registry at the WebClient root.
+
+    When state.locked === true  → full-screen overlay is visible.
+                                  pointer-events:all on the overlay means
+                                  nothing underneath can be clicked.
+    When state.locked === false → the component renders nothing (display:none
+                                  via t-if), so normal Odoo usage continues.
+    When state.locked === null  → still loading; render nothing yet.
+-->
+<t t-name="saas_subscription.SubscriptionLockScreen">
+
+    <!-- Only render the overlay when we KNOW the account is locked -->
+    <t t-if="state.locked === true">
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Full-screen lock overlay
+             pointer-events:all   → captures every mouse/touch event
+             tabindex="-1"        → captures Tab key focus
+             @keydown.stop        → swallows all keyboard shortcuts
+             @contextmenu.prevent → blocks right-click menu
+        ════════════════════════════════════════════════════════════════ -->
+        <div class="o_saas_lock_overlay"
+             tabindex="-1"
+             t-on-keydown.stop=""
+             t-on-keyup.stop=""
+             t-on-keypress.stop=""
+             t-on-click.stop=""
+             t-on-mousedown.stop=""
+             t-on-mouseup.stop=""
+             t-on-contextmenu.prevent.stop="">
+
+            <!-- Blurred backdrop (blurs whatever is underneath) -->
+            <div class="o_saas_lock_backdrop"/>
+
+            <!-- ── Lock Card ─────────────────────────────────────────── -->
+            <div class="o_saas_lock_card" role="alertdialog"
+                 aria-modal="true"
+                 aria-labelledby="saas_lock_title"
+                 aria-describedby="saas_lock_desc">
+
+                <!-- Animated padlock icon -->
+                <div class="o_saas_lock_icon_wrap">
+                    <div class="o_saas_lock_icon_ring"/>
+                    <i class="fa fa-lock o_saas_lock_icon" aria-hidden="true"/>
+                </div>
+
+                <!-- Title -->
+                <h1 class="o_saas_lock_title" id="saas_lock_title">
+                    Subscription Expired
+                </h1>
+
+                <!-- Company badge -->
+                <div class="o_saas_lock_company_badge">
+                    <i class="fa fa-building-o me-2"/>
+                    <t t-esc="state.companyName"/>
+                </div>
+
+                <!-- Info grid -->
+                <div class="o_saas_lock_info_grid" id="saas_lock_desc">
+                    <div class="o_saas_lock_info_row" t-if="state.plan">
+                        <span class="o_saas_lock_info_label">Plan</span>
+                        <span class="o_saas_lock_info_value">
+                            <t t-esc="state.plan"/>
+                        </span>
+                    </div>
+                    <div class="o_saas_lock_info_row" t-if="state.endDate">
+                        <span class="o_saas_lock_info_label">Expired On</span>
+                        <span class="o_saas_lock_info_value text-danger fw-semibold">
+                            <i class="fa fa-calendar-times-o me-1"/>
+                            <t t-esc="state.endDate"/>
+                        </span>
+                    </div>
+                    <div class="o_saas_lock_info_row">
+                        <span class="o_saas_lock_info_label">Status</span>
+                        <span class="o_saas_lock_info_value">
+                            <span class="badge bg-danger rounded-pill">
+                                <t t-esc="stateLabel"/>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Message -->
+                <p class="o_saas_lock_message">
+                    Your company's subscription is no longer active.
+                    All system access has been <strong>suspended</strong> until
+                    the subscription is renewed by an administrator.
+                </p>
+
+                <!-- Action buttons -->
+                <div class="o_saas_lock_actions">
+                    <button class="o_saas_lock_btn_primary"
+                            t-on-click.stop="onContactSupport">
+                        <i class="fa fa-envelope me-2"/>
+                        Contact Administrator
+                    </button>
+                    <button class="o_saas_lock_btn_secondary"
+                            t-on-click.stop="onRefresh">
+                        <i class="fa fa-refresh me-2"
+                           t-attf-class="fa fa-refresh me-2 #{state.loading ? 'fa-spin' : ''}"/>
+                        Check Again
+                    </button>
+                </div>
+
+                <!-- Auto-refresh countdown -->
+                <p class="o_saas_lock_countdown">
+                    <i class="fa fa-clock-o me-1"/>
+                    Auto-checking in
+                    <strong><t t-esc="state.retryIn"/>s</strong>
+                </p>
+
+            </div>
+            <!-- /lock card -->
+
+        </div>
+        <!-- /overlay -->
+
+    </t>
+
+</t>
+</templates>

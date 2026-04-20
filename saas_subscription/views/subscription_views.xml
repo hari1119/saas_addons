@@ -38,7 +38,6 @@
     <record id="view_saas_subscription_form" model="ir.ui.view">
         <field name="name">saas.subscription.form</field>
         <field name="model">saas.subscription</field>
-        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <form string="Subscription">
                 <header>
@@ -70,6 +69,7 @@
                         </button>
                     </div>
 
+                    <!-- Expiry alert banner -->
                     <div class="alert alert-warning" role="alert"
                          invisible="not is_near_expiry or state != 'active'">
                         <strong>⚠️ Expiring Soon!</strong>
@@ -151,6 +151,7 @@
                                   string="Log Entries"
                                   domain="[('subscription_id','=',active_id)]"
                                   model="saas.subscription.log">
+                                <!-- rendered inline via related field below -->
                             </list>
                         </page>
                         <page string="Chatter" name="chatter">
@@ -231,7 +232,7 @@
     </record>
 
     <!-- ═══ Search ══════════════════════════════════════════════════════════ -->
-    <!-- <record id="view_saas_subscription_search" model="ir.ui.view">
+    <record id="view_saas_subscription_search" model="ir.ui.view">
         <field name="name">saas.subscription.search</field>
         <field name="model">saas.subscription</field>
         <field name="arch" type="xml">
@@ -239,6 +240,7 @@
                 <field name="reference"/>
                 <field name="company_id"/>
                 <field name="type_id"/>
+                <!-- Quick filters -->
                 <filter name="active" string="Active"
                         domain="[('state','=','active')]"/>
                 <filter name="trial" string="Trial"
@@ -254,6 +256,7 @@
                 <separator/>
                 <filter name="auto_renewal" string="Auto-Renewal On"
                         domain="[('auto_renewal','=',True)]"/>
+                <!-- Group By -->
                 <group expand="0" string="Group By">
                     <filter name="group_state" string="Status"
                             context="{'group_by': 'state'}"/>
@@ -268,7 +271,7 @@
                 </group>
             </search>
         </field>
-    </record> -->
+    </record>
 
     <!-- ═══ Log list (embedded) ═════════════════════════════════════════════ -->
     <record id="view_saas_subscription_log_list" model="ir.ui.view">
@@ -290,7 +293,7 @@
         <field name="name">Subscriptions</field>
         <field name="res_model">saas.subscription</field>
         <field name="view_mode">list,kanban,form</field>
-        <!-- <field name="search_view_id" ref="view_saas_subscription_search"/> -->
+        <field name="search_view_id" ref="view_saas_subscription_search"/>
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

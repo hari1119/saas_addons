@@ -1,0 +1,245 @@
+/* ============================================================
+   SaaS Subscription Lock Screen
+   ============================================================
+   The overlay sits at z-index: 10000 so it covers menus,
+   dialogs, tooltips, and every other Odoo layer.
+   pointer-events: all  → swallows every click/touch.
+   ============================================================ */
+
+/* ── Overlay wrapper ────────────────────────────────────────── */
+.o_saas_lock_overlay {
+    position: fixed;
+    inset: 0;                    /* top/right/bottom/left: 0 */
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: all;         /* captures ALL interactions */
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+}
+
+/* ── Blurred / darkened backdrop ────────────────────────────── */
+.o_saas_lock_backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.72);   /* dark navy, 72% opacity  */
+    backdrop-filter: blur(8px) saturate(0.4);
+    -webkit-backdrop-filter: blur(8px) saturate(0.4);
+    z-index: 0;
+}
+
+/* ── Card ───────────────────────────────────────────────────── */
+.o_saas_lock_card {
+    position: relative;
+    z-index: 1;
+    width: min(480px, calc(100vw - 40px));
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 44px 40px 36px;
+    text-align: center;
+    box-shadow:
+        0 32px 64px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.08);
+    animation: o_saas_lock_slide_in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes o_saas_lock_slide_in {
+    from {
+        opacity: 0;
+        transform: translateY(-28px) scale(0.94);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Lock icon ──────────────────────────────────────────────── */
+.o_saas_lock_icon_wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 88px;
+    height: 88px;
+    margin-bottom: 20px;
+}
+
+.o_saas_lock_icon_ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 35%, #ff6b6b 0%, #c0392b 100%);
+    animation: o_saas_lock_pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes o_saas_lock_pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.45); }
+    50%       { box-shadow: 0 0 0 14px rgba(192, 57, 43, 0); }
+}
+
+.o_saas_lock_icon {
+    position: relative;
+    font-size: 36px;
+    color: #ffffff;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+/* ── Title ──────────────────────────────────────────────────── */
+.o_saas_lock_title {
+    font-size: 1.65rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    margin: 0 0 10px;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+}
+
+/* ── Company badge ──────────────────────────────────────────── */
+.o_saas_lock_company_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+/* ── Info grid ──────────────────────────────────────────────── */
+.o_saas_lock_info_grid {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.o_saas_lock_info_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #e9edf2;
+}
+
+.o_saas_lock_info_row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.o_saas_lock_info_row:first-child {
+    padding-top: 0;
+}
+
+.o_saas_lock_info_label {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.o_saas_lock_info_value {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* ── Message paragraph ──────────────────────────────────────── */
+.o_saas_lock_message {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin: 0 0 28px;
+}
+
+/* ── Action buttons ─────────────────────────────────────────── */
+.o_saas_lock_actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.o_saas_lock_btn_primary,
+.o_saas_lock_btn_secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+    letter-spacing: 0.2px;
+}
+
+.o_saas_lock_btn_primary {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.4);
+}
+
+.o_saas_lock_btn_primary:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #96281b 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(192, 57, 43, 0.5);
+}
+
+.o_saas_lock_btn_primary:active {
+    transform: translateY(0);
+}
+
+.o_saas_lock_btn_secondary {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+}
+
+.o_saas_lock_btn_secondary:hover {
+    background: #e2e8f0;
+    color: #334155;
+    transform: translateY(-1px);
+}
+
+/* ── Countdown ──────────────────────────────────────────────── */
+.o_saas_lock_countdown {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin: 0;
+    letter-spacing: 0.15px;
+}
+
+.o_saas_lock_countdown strong {
+    color: #64748b;
+}
+
+/* ── Responsive: small screens ──────────────────────────────── */
+@media (max-width: 520px) {
+    .o_saas_lock_card {
+        padding: 32px 22px 26px;
+        border-radius: 16px;
+    }
+
+    .o_saas_lock_title {
+        font-size: 1.35rem;
+    }
+
+    .o_saas_lock_icon_wrap {
+        width: 70px;
+        height: 70px;
+    }
+
+    .o_saas_lock_icon {
+        font-size: 28px;
+    }
+}
