@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SaaS eCommerce QR Payment Proof</title>
+    <style>
+        body {
+            margin: 0;
+            color: #1f2937;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            line-height: 1.55;
+        }
+        .page {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 34px 22px 46px;
+        }
+        .hero {
+            border: 1px solid #d7dde7;
+            border-radius: 8px;
+            padding: 28px;
+            background: #f8fafc;
+        }
+        h1 {
+            margin: 0 0 10px;
+            color: #111827;
+            font-size: 30px;
+            line-height: 1.2;
+        }
+        h2 {
+            margin: 30px 0 12px;
+            color: #111827;
+            font-size: 22px;
+        }
+        h3 {
+            margin: 20px 0 8px;
+            color: #111827;
+            font-size: 17px;
+        }
+        p {
+            margin: 0 0 12px;
+        }
+        ul, ol {
+            margin: 8px 0 0 22px;
+            padding: 0;
+        }
+        li {
+            margin: 7px 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+        }
+        .card {
+            border: 1px solid #d7dde7;
+            border-radius: 8px;
+            padding: 16px;
+            background: #ffffff;
+        }
+        .badge {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            color: #075985;
+            background: #e0f2fe;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .note {
+            margin-top: 18px;
+            padding: 14px 16px;
+            border-left: 4px solid #2563eb;
+            background: #eff6ff;
+        }
+        code {
+            padding: 2px 5px;
+            border-radius: 4px;
+            background: #eef2f7;
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <section class="hero">
+            <span class="badge">SaaS eCommerce</span>
+            <h1>SaaS eCommerce QR Payment Proof</h1>
+            <p>
+                This module helps small businesses sell products through an Odoo website on their own domain,
+                collect manual QR payments, and let internal users verify the customer payment screenshot before
+                confirming the sale order.
+            </p>
+            <p>
+                <strong>Author:</strong> Hari<br/>
+                <strong>Portfolio:</strong>
+                <a href="https://www.linkedin.com/in/hari-prasath-b4266718b/" target="_blank">
+                    Hari Prasath on LinkedIn
+                </a>
+            </p>
+        </section>
+
+        <h2>Project Scope</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Website Sales</h3>
+                <p>Uses standard Odoo eCommerce. Products published from the product master are available in the website shop.</p>
+            </div>
+            <div class="card">
+                <h3>Separate Domain</h3>
+                <p>Each business can use the Odoo Website domain setting, for example <code>https://shop.example.com</code>.</p>
+            </div>
+            <div class="card">
+                <h3>Manual QR Payment</h3>
+                <p>Shows a QR code or manual bank instructions on the checkout payment page.</p>
+            </div>
+            <div class="card">
+                <h3>Internal Verification</h3>
+                <p>Orders stay pending until a user verifies the uploaded screenshot and confirms the sale order.</p>
+            </div>
+        </div>
+
+        <h2>Configuration</h2>
+        <ol>
+            <li>Install <code>website_sale</code> and this module.</li>
+            <li>Open <code>Website &gt; Configuration &gt; Settings</code>.</li>
+            <li>Select the required website at the top of the settings page.</li>
+            <li>Set the website domain in the standard Domain field.</li>
+            <li>Enable <strong>QR Payment Proof</strong>.</li>
+            <li>Enter the UPI ID and payee name, or enter manual bank instructions.</li>
+            <li>Publish products from the product master by enabling <strong>Can be Sold</strong> and publishing them on the website.</li>
+        </ol>
+
+        <h2>Customer Flow</h2>
+        <ol>
+            <li>Customer adds products to cart and proceeds to checkout.</li>
+            <li>Customer scans the QR code or follows the manual payment instructions.</li>
+            <li>Customer uploads the payment screenshot or PDF proof.</li>
+            <li>The order is marked as <strong>Pending Verification</strong>.</li>
+            <li>The customer sees a confirmation message that the payment proof is under review.</li>
+        </ol>
+
+        <h2>Internal User Flow</h2>
+        <ol>
+            <li>Open <code>eCommerce &gt; Orders &gt; QR Payment Proofs</code>.</li>
+            <li>Review the uploaded screenshot and payment reference on the sale order.</li>
+            <li>Click <strong>Verify QR Payment</strong> to confirm the sale order.</li>
+            <li>Click <strong>Reject QR Payment</strong> if the payment cannot be matched.</li>
+        </ol>
+
+        <div class="note">
+            Product listing, checkout, customer records, quotation, sale order confirmation, invoicing, and delivery continue
+            to use standard Odoo eCommerce and Sales behavior.
+        </div>
+    </main>
+</body>
+</html>

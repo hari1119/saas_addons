@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_music_track_user,music.track.user,model_music_track,music_player.group_music_player_user,1,1,1,0
+access_music_track_manager,music.track.manager,model_music_track,music_player.group_music_player_manager,1,1,1,1
+access_music_playlist_user,music.playlist.user,model_music_playlist,music_player.group_music_player_user,1,1,1,0
+access_music_playlist_manager,music.playlist.manager,model_music_playlist,music_player.group_music_player_manager,1,1,1,1

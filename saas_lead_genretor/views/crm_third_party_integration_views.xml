@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_crm_third_party_integration_list" model="ir.ui.view">
+        <field name="name">crm.third.party.integration.list</field>
+        <field name="model">crm.third.party.integration</field>
+        <field name="arch" type="xml">
+            <list string="Third Party Integrations">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="source"/>
+                <field name="url"/>
+                <field name="team_id"/>
+                <field name="salesperson_id"/>
+                <field name="last_import_date"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_crm_third_party_integration_form" model="ir.ui.view">
+        <field name="name">crm.third.party.integration.form</field>
+        <field name="model">crm.third.party.integration</field>
+        <field name="arch" type="xml">
+            <form string="Third Party Integration">
+                <header>
+                    <button name="action_open_import_wizard"
+                            type="object"
+                            string="Import Leads"
+                            class="btn-primary"
+                            icon="fa-download"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. IndiaMart"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Provider">
+                            <field name="active"/>
+                            <field name="source"/>
+                            <field name="url"/>
+                            <field name="key" password="True"/>
+                            <field name="external_user_id"/>
+                            <field name="profile_id"/>
+                        </group>
+                        <group string="CRM Defaults">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="utm_source_id"/>
+                            <field name="team_id"/>
+                            <field name="salesperson_id"/>
+                            <field name="last_import_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_crm_third_party_integration_search" model="ir.ui.view">
+        <field name="name">crm.third.party.integration.search</field>
+        <field name="model">crm.third.party.integration</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="source"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_crm_third_party_integration" model="ir.actions.act_window">
+        <field name="name">Third Party Integration</field>
+        <field name="res_model">crm.third.party.integration</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_crm_third_party_integration_search"/>
+    </record>
+</odoo>

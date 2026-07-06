@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="utm_source_odoo_services_website" model="utm.source">
+        <field name="name">Odoo Services Website</field>
+    </record>
+</odoo>

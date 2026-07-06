@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        This template is injected into the web client's <head>.
+        The actual CSS variables are written by the JS service at runtime.
+        We embed a small inline <style> placeholder so the browser has
+        the variables before the first paint.
+    -->
+    <template id="company_theme_head_inject"
+              name="Company Theme – CSS Variable Placeholder"
+              inherit_id="web.layout">
+        <xpath expr="//head" position="inside">
+            <style id="ct-css-vars">
+                /* Company Theme Dynamic – populated by JS service */
+                :root {
+                    --ct-primary: #1A73E8;
+                    --ct-secondary: #34A853;
+                    --ct-accent: #FBBC04;
+                    --ct-menu-bg: #1C2333;
+                    --ct-menu-text: #ffffff;
+                    --ct-menu-highlight: #1A73E8;
+                    --ct-topbar-bg: #ffffff;
+                    --ct-topbar-text: #1C2333;
+                    --ct-btn-radius: 8px;
+                    --ct-card-radius: 12px;
+                    --ct-page-bg: #F4F6FA;
+                    --ct-surface: #ffffff;
+                    --ct-text: #1C2333;
+                    --ct-border: #E2E8F0;
+                    --ct-sidebar-width: 240px;
+                }
+            </style>
+            <!-- Google Fonts preconnect -->
+            <link rel="preconnect" href="https://fonts.googleapis.com"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+            <link rel="stylesheet"
+                  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Syne:wght@400;600;700;800&amp;family=Outfit:wght@300;400;500;600;700&amp;family=DM+Sans:wght@300;400;500;600&amp;family=Nunito:wght@300;400;600;700&amp;family=Source+Sans+3:wght@300;400;600;700&amp;display=swap"/>
+        </xpath>
+    </template>
+
+</odoo>

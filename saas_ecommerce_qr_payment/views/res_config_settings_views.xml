@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_qr_payment" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.qr.payment</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="checkout_registration_setting" position="after">
+                <setting
+                    id="cod_payment_setting"
+                    string="Cash on Delivery"
+                    help="Allow customers to place an order and pay when the delivery is received."
+                >
+                    <field name="cod_payment_enabled"/>
+                </setting>
+                <setting
+                    id="qr_payment_proof_setting"
+                    string="QR Payment Proof"
+                    help="Allow customers to scan a QR code, pay manually, and upload payment proof before staff confirmation."
+                >
+                    <field name="qr_payment_enabled"/>
+                    <div class="content-group" invisible="not qr_payment_enabled">
+                        <div class="row mt8">
+                            <label class="col-lg-3" for="qr_payment_upi_id"/>
+                            <field name="qr_payment_upi_id" placeholder="business@upi"/>
+                        </div>
+                        <div class="row mt8">
+                            <label class="col-lg-3" for="qr_payment_payee_name"/>
+                            <field name="qr_payment_payee_name" placeholder="Business name"/>
+                        </div>
+                        <div class="row mt8">
+                            <label class="col-lg-3" for="qr_payment_note"/>
+                            <field name="qr_payment_note"/>
+                        </div>
+                        <div class="row mt8">
+                            <label class="col-lg-3" for="qr_payment_bank_details"/>
+                            <field name="qr_payment_bank_details" placeholder="Optional bank details or payment instructions"/>
+                        </div>
+                    </div>
+                </setting>
+            </setting>
+        </field>
+    </record>
+</odoo>

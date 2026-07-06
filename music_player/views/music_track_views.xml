@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_music_track_search" model="ir.ui.view">
+        <field name="name">music.track.search</field>
+        <field name="model">music.track</field>
+        <field name="arch" type="xml">
+            <search string="Music Tracks">
+                <field name="name"/>
+                <field name="artist"/>
+                <field name="album"/>
+                <field name="genre"/>
+                <field name="playlist_ids"/>
+                <filter string="Favorites" name="favorites" domain="[('favorite', '=', True)]"/>
+                <filter string="Recently Played" name="recently_played" domain="[('last_played', '!=', False)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Artist" name="group_artist" context="{'group_by': 'artist'}"/>
+                    <filter string="Album" name="group_album" context="{'group_by': 'album'}"/>
+                    <filter string="Genre" name="group_genre" context="{'group_by': 'genre'}"/>
+                    <filter string="Playlist" name="group_playlist" context="{'group_by': 'playlist_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_music_track_list" model="ir.ui.view">
+        <field name="name">music.track.list</field>
+        <field name="model">music.track</field>
+        <field name="arch" type="xml">
+            <list string="Music Tracks" default_order="favorite desc, name">
+                <field name="favorite" widget="boolean_favorite" optional="show"/>
+                <field name="name"/>
+                <field name="artist"/>
+                <field name="album" optional="show"/>
+                <field name="genre" optional="hide"/>
+                <field name="duration_display" optional="show"/>
+                <field name="play_count" optional="show"/>
+                <field name="last_played" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_music_track_kanban" model="ir.ui.view">
+        <field name="name">music.track.kanban</field>
+        <field name="model">music.track</field>
+        <field name="arch" type="xml">
+            <kanban class="o_music_track_kanban" sample="1">
+                <field name="cover_image"/>
+                <field name="name"/>
+                <field name="artist"/>
+                <field name="album"/>
+                <field name="genre"/>
+                <field name="favorite"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click o_music_track_card p-2">
+                            <div class="d-flex gap-3">
+                                <field name="cover_image" widget="image" class="o_music_cover_thumb"/>
+                                <div class="min-w-0 flex-grow-1">
+                                    <div class="d-flex align-items-start justify-content-between gap-2">
+                                        <div class="fw-bold text-truncate">
+                                            <field name="name"/>
+                                        </div>
+                                        <field name="favorite" widget="boolean_favorite"/>
+                                    </div>
+                                    <div class="text-muted text-truncate">
+                                        <field name="artist"/>
+                                    </div>
+                                    <div class="small text-muted text-truncate">
+                                        <field name="album"/>
+                                    </div>
+                                    <div class="small text-muted text-truncate">
+                                        <field name="genre"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_music_track_form" model="ir.ui.view">
+        <field name="name">music.track.form</field>
+        <field name="model">music.track</field>
+        <field name="arch" type="xml">
+            <form string="Music Track">
+                <header>
+                    <button name="action_fetch_link_details" string="Fetch Details" type="object" class="oe_highlight"/>
+                    <button name="action_fetch_direct_audio" string="Fetch Direct Audio" type="object"/>
+                    <button name="action_mark_played" string="Mark Played" type="object" class="oe_highlight" invisible="not audio_file"/>
+                    <button name="action_toggle_favorite" string="Toggle Favorite" type="object"/>
+                </header>
+                <sheet>
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Track title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="artist"/>
+                            <field name="album"/>
+                            <field name="genre"/>
+                            <field name="source_url" widget="url"/>
+                            <field name="link_status" readonly="1"/>
+                            <field name="metadata_source" readonly="1"/>
+                            <field name="thumbnail_url" invisible="1"/>
+                            <field name="duration_seconds" string="Duration (seconds)"/>
+                            <field name="duration_display" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="cover_image" widget="image" class="oe_avatar"/>
+                            <field name="favorite" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <group string="Audio">
+                        <field name="audio_filename" invisible="1"/>
+                        <field name="audio_file"
+                               filename="audio_filename"
+                               widget="binary"
+                               options="{'accepted_file_extensions': '.mp3,.wav,.ogg,.m4a,.aac,.flac'}"/>
+                        <field name="audio_url" widget="music_audio_player" readonly="1" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Playlists">
+                            <field name="playlist_ids" widget="many2many_tags" domain="[('company_id', 'in', [company_id, False])]"/>
+                        </page>
+                        <page string="Notes">
+                            <field name="description" placeholder="Notes"/>
+                        </page>
+                        <page string="Playback">
+                            <group>
+                                <field name="play_count" readonly="1"/>
+                                <field name="last_played" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_music_track" model="ir.actions.act_window">
+        <field name="name">Tracks</field>
+        <field name="res_model">music.track</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_music_track_search"/>
+        <field name="context">{'search_default_favorites': 0}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first music track
+            </p>
+        </field>
+    </record>
+</odoo>

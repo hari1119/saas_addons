@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="music_player.MusicStudio">
+        <div class="o_music_studio">
+            <t t-if="state.loading">
+                <div class="o_music_loading">
+                    <div class="o_music_loader">
+                        <span/>
+                        <span/>
+                        <span/>
+                        <span/>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <section class="o_music_shell">
+                    <aside class="o_music_now_playing">
+                        <div class="o_music_brand">
+                            <span class="o_music_brand_icon fa fa-music"/>
+                            <div>
+                                <h2>Music Studio</h2>
+                                <p t-if="activePlaylist">
+                                    <t t-esc="activePlaylist.name"/>
+                                </p>
+                                <p t-else="">All tracks</p>
+                            </div>
+                        </div>
+
+                        <t t-if="selectedTrack">
+                            <div class="o_music_cover_stage">
+                                <img t-att-src="coverUrl(selectedTrack)" alt="Cover"/>
+                                <div class="o_music_vinyl" t-att-class="{'is-spinning': player.state.isAnimating}">
+                                    <span class="o_music_vinyl_grooves"/>
+                                    <span class="o_music_vinyl_label"/>
+                                    <span class="o_music_vinyl_hole"/>
+                                    <span class="o_music_vinyl_shine"/>
+                                </div>
+                                <div class="o_music_tonearm" t-att-class="{'is-playing': player.state.isAnimating}">
+                                    <span class="o_music_tonearm_base"/>
+                                    <span class="o_music_tonearm_bar"/>
+                                    <span class="o_music_tonearm_needle"/>
+                                </div>
+                            </div>
+
+                            <div class="o_music_track_meta">
+                                <h3 t-esc="selectedTrack.name"/>
+                                <p>
+                                    <t t-esc="selectedTrack.artist || 'Unknown artist'"/>
+                                    <t t-if="selectedTrack.album"> · <t t-esc="selectedTrack.album"/></t>
+                                </p>
+                            </div>
+
+                            <div class="o_music_progress">
+                                <span t-esc="formatTime(player.state.currentTime)"/>
+                                <div class="o_music_progress_track">
+                                    <div t-att-style="progressStyle"/>
+                                </div>
+                                <span t-esc="formatTime(player.state.duration)"/>
+                            </div>
+
+                            <div class="o_music_controls">
+                                <button type="button" class="btn o_music_icon_btn" t-on-click="previousTrack" title="Previous">
+                                    <i class="fa fa-step-backward"/>
+                                </button>
+                                <button type="button"
+                                        t-att-class="player.state.isAnimating ? 'btn o_music_play_btn is-active' : 'btn o_music_play_btn'"
+                                        t-on-click="togglePlay"
+                                        title="Play/Pause">
+                                    <i t-if="player.state.isBuffering" class="fa fa-circle-o-notch fa-spin"/>
+                                    <i t-else="" t-att-class="player.state.isPlaying ? 'fa fa-pause' : 'fa fa-play'"/>
+                                </button>
+                                <button type="button" class="btn o_music_icon_btn" t-on-click="nextTrack" title="Next">
+                                    <i class="fa fa-step-forward"/>
+                                </button>
+                            </div>
+                            <div class="o_music_extra_controls">
+                                <button type="button"
+                                        t-att-class="player.state.shuffle ? 'btn o_music_chip_btn is-active' : 'btn o_music_chip_btn'"
+                                        t-on-click="toggleShuffle"
+                                        title="Shuffle">
+                                    <i class="fa fa-random"/>
+                                    <span>Shuffle</span>
+                                </button>
+                                <button type="button"
+                                        t-att-class="player.state.repeatMode !== 'off' ? 'btn o_music_chip_btn is-active' : 'btn o_music_chip_btn'"
+                                        t-on-click="toggleRepeat"
+                                        title="Repeat">
+                                    <i t-att-class="player.state.repeatMode === 'one' ? 'fa fa-repeat' : 'fa fa-refresh'"/>
+                                    <span t-if="player.state.repeatMode === 'one'">One</span>
+                                    <span t-elif="player.state.repeatMode === 'all'">Repeat</span>
+                                    <span t-else="">Repeat</span>
+                                </button>
+                                <button type="button"
+                                        t-att-class="selectedTrack.favorite ? 'btn o_music_chip_btn is-active is-liked' : 'btn o_music_chip_btn'"
+                                        t-on-click="(ev) => this.toggleFavorite(selectedTrack, ev)"
+                                        title="Like more">
+                                    <i t-att-class="selectedTrack.favorite ? 'fa fa-star' : 'fa fa-star-o'"/>
+                                    <span>Like</span>
+                                </button>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <div class="o_music_empty_state">
+                                <i class="fa fa-music"/>
+                                <h3>No tracks yet</h3>
+                                <button type="button" class="btn btn-primary" t-on-click="createTrack">Add Track</button>
+                            </div>
+                        </t>
+                    </aside>
+
+                    <main class="o_music_library">
+                        <div class="o_music_toolbar">
+                            <div>
+                                <h1>Library</h1>
+                                <p>
+                                    <t t-esc="filteredTracks.length"/> visible tracks
+                                    <t t-if="player.state.onlineMode"> · Remote list</t>
+                                </p>
+                            </div>
+                            <button t-if="player.state.onlineEndpoint"
+                                    type="button"
+                                    t-att-class="player.state.onlineMode ? 'btn o_music_mode_toggle is-online' : 'btn o_music_mode_toggle'"
+                                    t-on-click="togglePlaybackMode">
+                                <i t-att-class="player.state.onlineMode ? 'fa fa-cloud' : 'fa fa-hdd-o'"/>
+                                <span t-if="player.state.onlineMode">Online</span>
+                                <span t-else="">Offline</span>
+                            </button>
+                            <div class="o_music_search">
+                                <i class="fa fa-search"/>
+                                <input type="search"
+                                       placeholder="Search title, artist, album, genre"
+                                       t-att-value="state.query"
+                                       t-on-input="onSearch"/>
+                            </div>
+                        </div>
+
+                        <div class="o_music_stats">
+                            <div>
+                                <strong t-esc="state.tracks.length"/>
+                                <span>Tracks</span>
+                            </div>
+                            <div>
+                                <strong t-esc="state.playlists.length"/>
+                                <span>Playlists</span>
+                            </div>
+                            <div>
+                                <strong t-esc="favoriteCount"/>
+                                <span>Favorites</span>
+                            </div>
+                            <div>
+                                <strong t-esc="totalPlays"/>
+                                <span>Plays</span>
+                            </div>
+                        </div>
+
+                        <div t-if="!player.state.onlineMode" class="o_music_playlist_strip">
+                            <button type="button"
+                                    t-att-class="state.activePlaylistId ? 'btn' : 'btn is-active'"
+                                    t-on-click="() => this.selectPlaylist(false)">
+                                All
+                            </button>
+                            <t t-foreach="state.playlists" t-as="playlist" t-key="playlist.id">
+                                <button type="button"
+                                        t-att-class="state.activePlaylistId === playlist.id ? 'btn is-active' : 'btn'"
+                                        t-on-click="() => this.selectPlaylist(playlist.id)">
+                                    <t t-esc="playlist.name"/>
+                                    <span t-esc="playlist.track_count"/>
+                                </button>
+                            </t>
+                        </div>
+
+                        <div t-if="filteredTracks.length" class="o_music_track_grid">
+                            <t t-foreach="filteredTracks" t-as="track" t-key="track.id">
+                                <article t-att-class="player.state.selectedId === track.id ? 'o_music_track_tile is-selected' : 'o_music_track_tile'"
+                                         t-on-click="() => this.playTrack(track)">
+                                    <div class="o_music_tile_cover">
+                                        <img t-att-src="coverUrl(track)" alt="Cover"/>
+                                        <button type="button" class="btn o_music_tile_play" title="Play">
+                                            <i t-att-class="player.state.selectedId === track.id &amp;&amp; player.state.isPlaying ? 'fa fa-pause' : 'fa fa-play'"/>
+                                        </button>
+                                    </div>
+                                    <div class="o_music_tile_body">
+                                        <div class="o_music_tile_title" t-esc="track.name"/>
+                                        <div class="o_music_tile_artist" t-esc="track.artist || 'Unknown artist'"/>
+                                        <div class="o_music_tile_footer">
+                                            <span t-esc="track.duration_display || '0:00'"/>
+                                            <div>
+                                                <button t-if="track.source !== 'online'"
+                                                        type="button"
+                                                        class="btn o_music_micro_btn"
+                                                        title="Favorite"
+                                                        t-on-click="(ev) => this.toggleFavorite(track, ev)">
+                                                    <i t-att-class="track.favorite ? 'fa fa-star' : 'fa fa-star-o'"/>
+                                                </button>
+                                                <button t-if="track.source !== 'online'"
+                                                        type="button"
+                                                        class="btn o_music_micro_btn"
+                                                        title="Open"
+                                                        t-on-click="(ev) => this.openTrack(track, ev)">
+                                                    <i class="fa fa-external-link"/>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </t>
+                        </div>
+                        <div t-else="" class="o_music_empty_library">
+                            <i class="fa fa-search"/>
+                            <h3>No matching tracks</h3>
+                            <p>Try another search or playlist.</p>
+                        </div>
+                    </main>
+                </section>
+            </t>
+        </div>
+    </t>
+</templates>

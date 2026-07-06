@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_smart_service_team_list" model="ir.ui.view">
+        <field name="name">smart.service.team.list</field>
+        <field name="model">smart.service.team</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="manager_id"/>
+                <field name="member_ids" widget="many2many_tags"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_smart_service_team_form" model="ir.ui.view">
+        <field name="name">smart.service.team.form</field>
+        <field name="model">smart.service.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="manager_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Members">
+                            <field name="member_ids" widget="many2many_tags"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_smart_service_team" model="ir.actions.act_window">
+        <field name="name">Teams</field>
+        <field name="res_model">smart.service.team</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

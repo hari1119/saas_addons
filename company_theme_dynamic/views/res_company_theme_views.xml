@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Company Form – Theme Tab
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="view_company_form_theme" model="ir.ui.view">
+        <field name="name">res.company.form.theme</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="🎨 Theme" name="theme_config">
+                    <div class="ct-admin-panel">
+
+                        <!-- Live Preview Banner -->
+                        <div class="ct-preview-banner" id="ct-live-preview">
+                            <div class="ct-preview-bar">
+                                <div class="ct-preview-dot ct-dot-primary"/>
+                                <div class="ct-preview-dot ct-dot-secondary"/>
+                                <div class="ct-preview-dot ct-dot-accent"/>
+                                <span class="ct-preview-label">Live Theme Preview</span>
+                                <div class="ct-preview-chips">
+                                    <span class="ct-chip ct-btn-preview">Button</span>
+                                    <span class="ct-chip ct-badge-preview">Badge</span>
+                                    <span class="ct-chip ct-link-preview">Link</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <group string="🎭 Quick Preset" col="1">
+                            <field name="theme_preset" widget="radio"
+                                   options="{'horizontal': true}"/>
+                        </group>
+
+                        <div class="row mt-3">
+                            <!-- Colors -->
+                            <div class="col-lg-6">
+                                <group string="🎨 Color Palette">
+                                    <field name="theme_primary_color"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                    <field name="theme_secondary_color"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                    <field name="theme_accent_color"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                </group>
+                                <group string="📐 Shape &amp; Typography">
+                                    <field name="theme_button_radius"/>
+                                    <field name="theme_card_radius"/>
+                                    <field name="theme_font_family"/>
+                                    <field name="theme_sidebar_width"/>
+                                </group>
+                            </div>
+
+                            <!-- Menu / TopBar -->
+                            <div class="col-lg-6">
+                                <group string="🗂️ Sidebar / Menu">
+                                    <field name="theme_menu_bg"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                    <field name="theme_menu_text"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                    <field name="theme_menu_highlight"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                </group>
+                                <group string="🔝 Top Bar">
+                                    <field name="theme_topbar_bg"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                    <field name="theme_topbar_text"
+                                           widget="color"
+                                           options="{'colorpicker': true}"/>
+                                </group>
+                            </div>
+                        </div>
+
+                        <!-- Effects Row -->
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <group string="✨ Animations &amp; Effects">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <field name="theme_animation_style"
+                                                   widget="selection"/>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <field name="theme_dark_mode"/>
+                                                </div>
+                                                <div class="col-6">
+                                                    <field name="theme_enable_glow_buttons"/>
+                                                </div>
+                                                <div class="col-6">
+                                                    <field name="theme_enable_gradient_menu"/>
+                                                </div>
+                                                <div class="col-6">
+                                                    <field name="theme_enable_particle"/>
+                                                </div>
+                                                <div class="col-6">
+                                                    <field name="theme_show_watermark"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </group>
+                            </div>
+                        </div>
+
+                        <!-- Theme Preview Widget -->
+                        <div class="mt-3">
+                            <field name="id" widget="company_theme_preview" invisible="1"/>
+                        </div>
+
+                    </div>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Settings – Quick Theme Access
+    ═══════════════════════════════════════════════════════════════════ -->
+    <record id="action_company_theme_config" model="ir.actions.act_window">
+        <field name="name">Company Themes</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'default_active_id': True}</field>
+    </record>
+
+    <record id="menu_company_theme" model="ir.ui.menu">
+        <field name="name">Company Themes</field>
+        <field name="parent_id" ref="base_setup.menu_config"/>
+        <field name="action" ref="action_company_theme_config"/>
+        <field name="sequence">99</field>
+        <field name="group_ids" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+</odoo>

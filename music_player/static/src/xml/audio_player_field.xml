@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="music_player.AudioPlayerField">
+        <div class="o_music_audio_player">
+            <audio t-if="audioUrl" controls="controls" preload="metadata" t-att-src="audioUrl"/>
+            <div t-else="" class="o_music_audio_empty text-muted">
+                No audio file
+            </div>
+        </div>
+    </t>
+</templates>

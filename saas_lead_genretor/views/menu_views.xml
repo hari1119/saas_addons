@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_crm_import_leads"
+              name="Import Leads"
+              parent="crm.crm_menu_root"
+              action="action_crm_lead_import_wizard"
+              sequence="6"
+              groups="saas_lead_genretor.group_saas_lead_generator_user"/>
+
+    <menuitem id="menu_crm_third_party_integration"
+              name="Third Party Integration"
+              parent="crm.crm_menu_config"
+              action="action_crm_third_party_integration"
+              sequence="30"
+              groups="saas_lead_genretor.group_saas_lead_generator_manager"/>
+</odoo>

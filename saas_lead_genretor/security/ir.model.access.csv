@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_third_party_integration_user,crm.third.party.integration user,model_crm_third_party_integration,saas_lead_genretor.group_saas_lead_generator_user,1,0,0,0
+access_crm_third_party_integration_manager,crm.third.party.integration manager,model_crm_third_party_integration,saas_lead_genretor.group_saas_lead_generator_manager,1,1,1,1
+access_crm_lead_import_wizard_user,crm.lead.import.wizard user,model_crm_lead_import_wizard,saas_lead_genretor.group_saas_lead_generator_user,1,1,1,1
+access_crm_lead_import_result_line_user,crm.lead.import.result.line user,model_crm_lead_import_result_line,saas_lead_genretor.group_saas_lead_generator_user,1,1,1,1

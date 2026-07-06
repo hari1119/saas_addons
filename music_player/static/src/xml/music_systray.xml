@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="music_player.MusicSystray">
+        <div t-if="player.state.track" class="o_music_systray">
+            <button type="button" class="btn o_music_systray_btn" t-on-click="() => this.player.toggle()" title="Play/Pause">
+                <span t-att-class="player.state.isAnimating ? 'o_music_systray_dot is-live' : 'o_music_systray_dot'"/>
+                <i t-if="player.state.isBuffering" class="fa fa-circle-o-notch fa-spin"/>
+                <i t-else="" t-att-class="player.state.isPlaying ? 'fa fa-pause' : 'fa fa-play'"/>
+            </button>
+            <button type="button" class="btn o_music_systray_title" t-on-click="openStudio" t-att-title="player.state.track.name">
+                <span t-esc="player.state.track.name"/>
+            </button>
+            <button type="button" class="btn o_music_systray_btn" t-on-click="() => this.player.next()" title="Next">
+                <i class="fa fa-step-forward"/>
+            </button>
+        </div>
+    </t>
+</templates>

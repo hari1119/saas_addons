@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_smart_service_root" name="Smart Service" sequence="45"/>
+    <menuitem id="menu_smart_service_requests" name="Requests" parent="menu_smart_service_root" action="action_smart_service_request" sequence="10"/>
+    <menuitem id="menu_smart_service_sla_breached" name="SLA Breached" parent="menu_smart_service_root" action="action_smart_service_request_sla_breached" sequence="20"/>
+    <menuitem id="menu_smart_service_configuration" name="Configuration" parent="menu_smart_service_root" groups="smart_complaint_service.group_smart_service_manager" sequence="90"/>
+    <menuitem id="menu_smart_service_categories" name="Categories" parent="menu_smart_service_configuration" action="action_smart_service_category" sequence="10"/>
+    <menuitem id="menu_smart_service_teams" name="Teams" parent="menu_smart_service_configuration" action="action_smart_service_team" sequence="20"/>
+    <menuitem id="menu_smart_service_sla" name="SLA Policies" parent="menu_smart_service_configuration" action="action_smart_service_sla" sequence="30"/>
+</odoo>

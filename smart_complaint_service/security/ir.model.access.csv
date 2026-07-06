@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_smart_service_request_user,smart.service.request user,model_smart_service_request,smart_complaint_service.group_smart_service_user,1,1,1,0
+access_smart_service_request_manager,smart.service.request manager,model_smart_service_request,smart_complaint_service.group_smart_service_manager,1,1,1,1
+access_smart_service_request_portal,smart.service.request portal,model_smart_service_request,base.group_portal,1,0,0,0
+access_smart_service_category_user,smart.service.category user,model_smart_service_category,smart_complaint_service.group_smart_service_user,1,0,0,0
+access_smart_service_category_manager,smart.service.category manager,model_smart_service_category,smart_complaint_service.group_smart_service_manager,1,1,1,1
+access_smart_service_category_portal,smart.service.category portal,model_smart_service_category,base.group_portal,1,0,0,0
+access_smart_service_team_user,smart.service.team user,model_smart_service_team,smart_complaint_service.group_smart_service_user,1,0,0,0
+access_smart_service_team_manager,smart.service.team manager,model_smart_service_team,smart_complaint_service.group_smart_service_manager,1,1,1,1
+access_smart_service_sla_user,smart.service.sla user,model_smart_service_sla,smart_complaint_service.group_smart_service_user,1,0,0,0
+access_smart_service_sla_manager,smart.service.sla manager,model_smart_service_sla,smart_complaint_service.group_smart_service_manager,1,1,1,1

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_qr_proof_upload" inherit_id="website_sale.payment" name="QR Payment Proof Upload">
+        <xpath expr="//div[@id='payment_method']" position="before">
+            <div
+                t-if="website.cod_payment_enabled and website_sale_order.amount_total"
+                id="saas_cod_payment"
+                class="border rounded p-3 mb-3"
+            >
+                <h4 class="mb-2">Cash on Delivery</h4>
+                <p class="mb-3">
+                    Place the order now and pay when your delivery is received.
+                </p>
+                <form action="/shop/cod/confirm" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <button type="submit" class="btn btn-primary">Place Order with Cash on Delivery</button>
+                </form>
+            </div>
+            <div
+                t-if="website.qr_payment_enabled and website_sale_order.amount_total"
+                id="saas_qr_payment_proof"
+                class="border rounded p-3 mb-3"
+            >
+                <h4 class="mb-3">Pay by QR Code</h4>
+                <div t-if="qr_payment_error" class="alert alert-danger" role="alert">
+                    <span t-if="qr_payment_error == 'missing_proof'">Please attach the payment screenshot before submitting.</span>
+                    <span t-elif="qr_payment_error == 'file_too_large'">The uploaded file is too large. Please upload a file under 8 MB.</span>
+                    <span t-else="">Unable to submit the payment proof. Please try again.</span>
+                </div>
+                <div class="row g-3 align-items-start">
+                    <div class="col-md-auto text-center" t-if="website_sale_order.qr_payment_qr_url">
+                        <img
+                            class="border rounded bg-white p-2"
+                            t-att-src="website_sale_order.qr_payment_qr_url"
+                            alt="QR payment code"
+                            width="280"
+                            height="280"
+                        />
+                    </div>
+                    <div class="col">
+                        <p class="mb-2">
+                            Scan the QR code and pay
+                            <strong t-field="website_sale_order.amount_total"
+                                    t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                            for order <strong t-out="website_sale_order.name"/>.
+                        </p>
+                        <pre t-if="website.qr_payment_bank_details" class="small bg-light border rounded p-2 mb-3" t-out="website.qr_payment_bank_details"/>
+                        <form action="/shop/qr_payment/submit" method="post" enctype="multipart/form-data" class="mt-2">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="mb-3">
+                                <label for="qr_payment_customer_reference" class="form-label">Payment reference</label>
+                                <input
+                                    id="qr_payment_customer_reference"
+                                    name="qr_payment_customer_reference"
+                                    type="text"
+                                    class="form-control"
+                                    placeholder="UPI transaction ID or bank reference"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label for="qr_payment_proof" class="form-label">Payment screenshot</label>
+                                <input
+                                    id="qr_payment_proof"
+                                    name="qr_payment_proof"
+                                    type="file"
+                                    class="form-control"
+                                    accept="image/*,.pdf"
+                                    required="required"
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Payment Proof</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="confirmation_qr_payment_status" inherit_id="website_sale.payment_confirmation_status" name="QR Payment Confirmation Status">
+        <xpath expr="//div[@name='order_confirmation']" position="inside">
+            <div t-if="order.qr_payment_state == 'pending'" class="alert alert-info px-3 py-3" role="alert">
+                Your payment screenshot has been submitted. We will confirm the order after internal verification.
+            </div>
+            <div t-if="order.qr_payment_state == 'verified'" class="alert alert-success px-3 py-3" role="alert">
+                Your QR payment has been verified and the order is confirmed.
+            </div>
+            <div t-if="order.qr_payment_state == 'rejected'" class="alert alert-warning px-3 py-3" role="alert">
+                Your payment proof could not be verified. Please contact us with your order number.
+            </div>
+            <div t-if="order.is_cash_on_delivery" class="alert alert-info px-3 py-3" role="alert">
+                Your order has been confirmed with Cash on Delivery. Please pay when the delivery is received.
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="address_form_fields_small_business" inherit_id="website_sale.address_form_fields" name="Small Business Checkout Address Fields">
+        <t name="b2b_fields" position="replace"/>
+
+        <xpath expr="//div[@id='div_name']/input[@name='name']" position="attributes">
+            <attribute name="required">required</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='div_email']/label" position="attributes">
+            <attribute name="class">col-form-label label-optional</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='div_phone']/input[@name='phone']" position="attributes">
+            <attribute name="required">required</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='div_street']/input[@name='street']" position="attributes">
+            <attribute name="required">required</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='div_city']/input[@name='city']" position="attributes">
+            <attribute name="required">required</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='div_country']/select[@name='country_id']" position="attributes">
+            <attribute name="required">required</attribute>
+        </xpath>
+    </template>
+</odoo>

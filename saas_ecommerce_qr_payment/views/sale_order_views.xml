@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_view_form_qr_payment" model="ir.ui.view">
+        <field name="name">sale.order.form.qr.payment</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header/field[@name='state']" position="before">
+                <button
+                    name="action_qr_payment_verify"
+                    string="Verify QR Payment"
+                    type="object"
+                    class="btn-primary"
+                    invisible="qr_payment_state != 'pending' or state not in ['draft', 'sent']"/>
+                <button
+                    name="action_qr_payment_reject"
+                    string="Reject QR Payment"
+                    type="object"
+                    invisible="qr_payment_state != 'pending'"/>
+                <button
+                    name="action_qr_payment_reset"
+                    string="Reset QR Proof"
+                    type="object"
+                    invisible="qr_payment_state not in ['pending', 'rejected']"/>
+            </xpath>
+            <xpath expr="//form/header" position="after">
+                <div class="alert alert-info" role="alert" invisible="qr_payment_state != 'pending'">
+                    Customer payment screenshot is waiting for verification.
+                </div>
+                <div class="alert alert-warning" role="alert" invisible="qr_payment_state != 'rejected'">
+                    QR payment proof was rejected. Ask the customer to upload a new proof.
+                </div>
+                <div class="alert alert-info" role="alert" invisible="not is_cash_on_delivery">
+                    This website order is Cash on Delivery.
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page string="QR Payment" name="qr_payment">
+                    <group>
+                        <group string="Verification">
+                            <field name="qr_payment_state" widget="badge"
+                                   decoration-info="qr_payment_state == 'pending'"
+                                   decoration-success="qr_payment_state == 'verified'"
+                                   decoration-warning="qr_payment_state == 'rejected'"/>
+                            <field name="qr_payment_customer_reference"/>
+                            <field name="qr_payment_submitted_at" readonly="1"/>
+                            <field name="qr_payment_verified_by_id" readonly="1"/>
+                            <field name="qr_payment_verified_at" readonly="1"/>
+                            <field name="qr_payment_rejection_reason"
+                                   placeholder="Reason shown internally when rejecting the payment proof."/>
+                            <field name="is_cash_on_delivery" readonly="1"/>
+                        </group>
+                        <group string="Customer Upload">
+                            <field name="qr_payment_proof_filename" readonly="1"/>
+                            <field name="qr_payment_proof" filename="qr_payment_proof_filename"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_qr_payment" model="ir.ui.view">
+        <field name="name">sale.order.search.qr.payment</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <filter name="my_sale_orders_filter" position="before">
+                <filter string="QR Payment Pending" name="qr_payment_pending" domain="[('qr_payment_state', '=', 'pending')]"/>
+                <filter string="QR Payment Verified" name="qr_payment_verified" domain="[('qr_payment_state', '=', 'verified')]"/>
+                <filter string="QR Payment Rejected" name="qr_payment_rejected" domain="[('qr_payment_state', '=', 'rejected')]"/>
+                <separator/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="sale_order_tree_qr_payment" model="ir.ui.view">
+        <field name="name">sale.order.list.qr.payment</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="qr_payment_state" optional="show" widget="badge"
+                       decoration-info="qr_payment_state == 'pending'"
+                       decoration-success="qr_payment_state == 'verified'"
+                       decoration-warning="qr_payment_state == 'rejected'"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="action_qr_payment_pending_orders" model="ir.actions.act_window">
+        <field name="name">QR Payment Proofs</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form,kanban,activity</field>
+        <field name="domain">[('qr_payment_state', '=', 'pending')]</field>
+        <field name="context">{'show_sale': True, 'create': False}</field>
+        <field name="search_view_id" ref="view_sales_order_filter_qr_payment"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No QR payment proofs are waiting for verification
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_qr_payment_pending_orders"
+        name="QR Payment Proofs"
+        parent="website_sale.menu_orders"
+        action="action_qr_payment_pending_orders"
+        sequence="2"
+        groups="sales_team.group_sale_salesman"/>
+</odoo>

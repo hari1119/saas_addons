@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_home_smart_service" name="Service Requests" inherit_id="portal.portal_my_home" priority="30">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_service_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_service_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/portal/static/src/img/portal-documents.svg'"/>
+                <t t-set="title">Service Requests</t>
+                <t t-set="url" t-value="'/my/service-requests'"/>
+                <t t-set="text">Track complaints, service requests, SLA status and feedback</t>
+                <t t-set="placeholder_count" t-value="'service_request_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
+                <t t-set="title">Track Ticket</t>
+                <t t-set="url" t-value="'/my/service-requests/track'"/>
+                <t t-set="text">Enter your ticket number to view status and communication</t>
+            </t>
+        </div>
+    </template>
+
+    <template id="portal_breadcrumbs_smart_service" inherit_id="portal.portal_breadcrumbs" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'service_requests'" class="breadcrumb-item active">
+                Service Requests
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_service_request_list" name="My Service Requests">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Service Requests</t>
+                </t>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/my/service-requests/track" class="btn btn-outline-primary">Track Ticket</a>
+                    <a href="/my/service-requests/create" class="btn btn-primary">Raise Complaint</a>
+                </div>
+            </div>
+
+            <div class="btn-group mb-3" role="group">
+                <a t-attf-class="btn btn-sm #{'btn-primary' if filterby == 'open' else 'btn-outline-primary'}" href="/my/service-requests?filterby=open">Open</a>
+                <a t-attf-class="btn btn-sm #{'btn-primary' if filterby == 'breached' else 'btn-outline-primary'}" href="/my/service-requests?filterby=breached">SLA Breached</a>
+                <a t-attf-class="btn btn-sm #{'btn-primary' if filterby == 'closed' else 'btn-outline-primary'}" href="/my/service-requests?filterby=closed">Closed</a>
+            </div>
+
+            <div t-if="not requests" class="alert alert-info">
+                No service requests found.
+            </div>
+            <t t-if="requests" t-call="portal.portal_table">
+                <thead>
+                    <tr>
+                        <th>Request</th>
+                        <th>Subject</th>
+                        <th>Category</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>SLA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="requests" t-as="service_request">
+                        <td>
+                            <a t-att-href="service_request.get_portal_url()">
+                                <span t-field="service_request.name"/>
+                            </a>
+                        </td>
+                        <td><span t-field="service_request.subject"/></td>
+                        <td><span t-field="service_request.category_id"/></td>
+                        <td><span t-field="service_request.priority"/></td>
+                        <td><span t-field="service_request.state"/></td>
+                        <td>
+                            <span t-if="service_request.sla_status == 'breached'" class="badge text-bg-danger">Breached</span>
+                            <span t-elif="service_request.sla_status == 'warning'" class="badge text-bg-warning">Warning</span>
+                            <span t-else="" class="badge text-bg-success">On Track</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_service_request_track" name="Track Service Request">
+        <t t-call="portal.portal_layout">
+            <div class="mb-4 rounded-3 p-4 text-white" style="background: linear-gradient(135deg, #1d4ed8, #0f766e);">
+                <div class="row align-items-center g-3">
+                    <div class="col-lg-8">
+                        <div class="small text-uppercase fw-semibold opacity-75 mb-2">Ticket Tracking</div>
+                        <h2 class="mb-2">Track Your Complaint</h2>
+                        <p class="mb-0 opacity-75">Enter your tracking number to view the latest status and continue communication.</p>
+                    </div>
+                    <div class="col-lg-4 text-lg-end">
+                        <a href="/my/service-requests/create" class="btn btn-light">Raise New Complaint</a>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/my/service-requests/track" method="post" class="border rounded-3 p-4 bg-white shadow-sm mb-4">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <label class="form-label fw-semibold" for="tracking_number">Tracking Number</label>
+                <div class="row g-2">
+                    <div class="col-md-9">
+                        <input id="tracking_number" name="tracking_number" type="text" class="form-control form-control-lg" placeholder="Example: SR00001" t-att-value="tracking_number"/>
+                    </div>
+                    <div class="col-md-3 d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fa fa-search me-1"/>
+                            Track
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div t-if="not_found" class="alert alert-warning">
+                No complaint was found for this tracking number in your portal account.
+            </div>
+
+            <div t-if="service_request" class="border rounded-3 p-4 bg-white shadow-sm">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
+                    <div>
+                        <div class="text-muted small text-uppercase">Tracking Number</div>
+                        <h3 class="mb-1" t-field="service_request.name"/>
+                        <div class="text-muted" t-field="service_request.subject"/>
+                    </div>
+                    <div class="text-lg-end">
+                        <span t-if="service_request.sla_status == 'breached'" class="badge text-bg-danger">SLA Breached</span>
+                        <span t-elif="service_request.sla_status == 'warning'" class="badge text-bg-warning">SLA Warning</span>
+                        <span t-else="" class="badge text-bg-success">SLA On Track</span>
+                        <div class="h5 mt-2 mb-0" t-field="service_request.state"/>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small">Category</div>
+                            <strong t-field="service_request.category_id"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small">Priority</div>
+                            <strong t-field="service_request.priority"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small">Submitted</div>
+                            <strong t-field="service_request.submitted_date"/>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small">SLA Deadline</div>
+                            <strong t-field="service_request.sla_deadline"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a t-att-href="service_request.get_portal_url()" class="btn btn-primary">
+                        <i class="fa fa-comments me-1"/>
+                        Open Communication Page
+                    </a>
+                    <a href="/my/service-requests" class="btn btn-outline-secondary">View All Requests</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_service_request_create" name="Create Service Request">
+        <t t-call="portal.portal_layout">
+            <div class="mb-4 rounded-3 p-4 text-white" style="background: linear-gradient(135deg, #14532d, #0f766e 52%, #1d4ed8);">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-8">
+                        <div class="small text-uppercase fw-semibold opacity-75 mb-2">Customer Support</div>
+                        <h2 class="mb-2">Raise a Complaint</h2>
+                        <p class="mb-0 opacity-75">Share the issue, select the right category, and track every update from your portal.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="bg-white bg-opacity-10 rounded-3 p-3">
+                            <div class="d-flex align-items-center gap-2 mb-2">
+                                <i class="fa fa-ticket"/>
+                                <strong>Track after submit</strong>
+                            </div>
+                            <div class="small opacity-75">You will receive a request number immediately after submitting.</div>
+                            <a href="/my/service-requests/track" class="btn btn-sm btn-light mt-3">Track Existing Ticket</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div t-if="error == 'category'" class="alert alert-danger">
+                Please select a valid category.
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <form action="/my/service-requests/create" method="post" enctype="multipart/form-data" class="border rounded-3 p-4 bg-white shadow-sm o_portal_service_request_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold" for="subject">Complaint Subject</label>
+                                <input id="subject" name="subject" type="text" required="required" class="form-control form-control-lg" placeholder="Example: Product not working after installation"/>
+                            </div>
+                            <div class="col-md-7">
+                                <label class="form-label fw-semibold" for="category_id">Category</label>
+                                <select id="category_id" name="category_id" required="required" class="form-select">
+                                    <option value="">Select category...</option>
+                                    <option t-foreach="categories" t-as="category" t-att-value="category.id">
+                                        <t t-out="category.name"/> - <t t-out="dict(category._fields['request_type'].selection).get(category.request_type)"/>
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label fw-semibold" for="priority">Priority</label>
+                                <select id="priority" name="priority" class="form-select">
+                                    <option value="0">Low</option>
+                                    <option value="1" selected="selected">Normal</option>
+                                    <option value="2">High</option>
+                                    <option value="3">Critical</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold" for="email">Email</label>
+                                <input id="email" name="email" type="email" class="form-control" t-att-value="request.env.user.partner_id.email"/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold" for="phone">Phone</label>
+                                <input id="phone" name="phone" type="text" class="form-control" t-att-value="request.env.user.partner_id.phone"/>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold" for="description">Complaint Details</label>
+                                <textarea id="description" name="description" required="required" rows="6" class="form-control" placeholder="Describe what happened, when it happened, and what support you need."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold" for="attachment">Attachment</label>
+                                <input id="attachment" name="attachment" type="file" class="form-control"/>
+                                <div class="form-text">Add a photo, invoice, screenshot, or document if available.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fa fa-paper-plane me-1"/>
+                                Submit Complaint
+                            </button>
+                            <a href="/my/service-requests" class="btn btn-outline-secondary btn-lg">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="border rounded-3 p-4 bg-light h-100">
+                        <h5 class="mb-3">What happens next?</h5>
+                        <div class="d-flex gap-3 mb-3">
+                            <span class="badge rounded-pill text-bg-primary align-self-start">1</span>
+                            <div>
+                                <strong>Submit</strong>
+                                <div class="text-muted small">Your complaint is registered with a tracking number.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3 mb-3">
+                            <span class="badge rounded-pill text-bg-info align-self-start">2</span>
+                            <div>
+                                <strong>Review</strong>
+                                <div class="text-muted small">The service team reviews the category, priority, and SLA.</div>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-3">
+                            <span class="badge rounded-pill text-bg-success align-self-start">3</span>
+                            <div>
+                                <strong>Communicate</strong>
+                                <div class="text-muted small">Use the portal request page for messages, status, and feedback.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_service_request_submitted" name="Service Request Submitted">
+        <t t-call="portal.portal_layout">
+            <div class="text-center border rounded-3 p-5 bg-white shadow-sm">
+                <div class="mx-auto mb-4 rounded-circle d-flex align-items-center justify-content-center text-bg-success" style="width: 72px; height: 72px;">
+                    <i class="fa fa-check fa-2x"/>
+                </div>
+                <h2 class="mb-2">Thank you, your complaint has been submitted.</h2>
+                <p class="text-muted mb-4">Use this request number for tracking and future communication.</p>
+
+                <div class="row g-3 justify-content-center mb-4">
+                    <div class="col-md-4">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small text-uppercase">Tracking Number</div>
+                            <div class="h4 mb-0" t-field="service_request.name"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small text-uppercase">Current Status</div>
+                            <div class="h5 mb-0" t-field="service_request.state"/>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="border rounded-3 p-3 h-100">
+                            <div class="text-muted small text-uppercase">SLA</div>
+                            <span t-if="service_request.sla_status == 'breached'" class="badge text-bg-danger">Breached</span>
+                            <span t-elif="service_request.sla_status == 'warning'" class="badge text-bg-warning">Warning</span>
+                            <span t-else="" class="badge text-bg-success">On Track</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a t-att-href="service_request.get_portal_url()" class="btn btn-primary btn-lg">
+                        <i class="fa fa-comments me-1"/>
+                        Open Communication Page
+                    </a>
+                    <a href="/my/service-requests/create" class="btn btn-outline-primary btn-lg">Create Another Complaint</a>
+                    <a href="/my/service-requests/track" class="btn btn-outline-primary btn-lg">Track Ticket</a>
+                    <a href="/my/service-requests" class="btn btn-outline-secondary btn-lg">View All Requests</a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_service_request_detail" name="Service Request Detail">
+        <t t-call="portal.portal_layout">
+            <div class="border rounded-3 p-4 mb-4 bg-white shadow-sm">
+                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+                    <div>
+                        <div class="text-muted small text-uppercase">Complaint Tracking</div>
+                        <h3 class="mb-1">
+                            <span t-field="service_request.name"/> - <span t-field="service_request.subject"/>
+                        </h3>
+                        <div class="text-muted">
+                            <span t-field="service_request.category_id"/> | Submitted <span t-field="service_request.submitted_date"/>
+                        </div>
+                    </div>
+                    <div class="text-lg-end">
+                        <span t-if="service_request.sla_status == 'breached'" class="badge text-bg-danger">SLA Breached</span>
+                        <span t-elif="service_request.sla_status == 'warning'" class="badge text-bg-warning">SLA Warning</span>
+                        <span t-else="" class="badge text-bg-success">SLA On Track</span>
+                        <div class="mt-2 h5 mb-0" t-field="service_request.state"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="border rounded-3 p-4 mb-4 bg-white">
+                        <h5 class="mb-3">Complaint Details</h5>
+                        <p class="mb-0" t-field="service_request.description"/>
+                    </div>
+                    <div t-if="service_request.resolution_note" class="border rounded-3 p-4 mb-4 bg-light">
+                        <h5 class="mb-3">Resolution</h5>
+                        <p class="mb-0" t-field="service_request.resolution_note"/>
+                    </div>
+
+                    <form t-att-action="'/my/service-requests/%s/message' % service_request.id" method="post" class="border rounded-3 p-4 mb-4 bg-white">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <label class="form-label fw-semibold" for="message">Add Future Communication</label>
+                        <textarea id="message" name="message" rows="4" class="form-control" placeholder="Send an update, ask a question, or add more details."></textarea>
+                        <button type="submit" class="btn btn-primary mt-3">
+                            <i class="fa fa-reply me-1"/>
+                            Send Message
+                        </button>
+                    </form>
+
+                    <div class="border rounded-3 p-4 mb-4 bg-white">
+                        <h5 class="mb-3">Communication History</h5>
+                        <div t-if="not messages" class="text-muted">No messages yet.</div>
+                        <div t-foreach="messages" t-as="message" class="border-bottom pb-3 mb-3">
+                            <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
+                                <strong t-out="message.author_id.name or 'Support Team'"/>
+                                <span class="text-muted small" t-field="message.date"/>
+                            </div>
+                            <div class="text-muted" t-field="message.body"/>
+                        </div>
+                    </div>
+
+                    <form t-if="service_request.state in ('resolved', 'closed')" t-att-action="'/my/service-requests/%s/reopen' % service_request.id" method="post" class="d-inline">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <button type="submit" class="btn btn-outline-primary">Reopen Request</button>
+                    </form>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="border rounded-3 p-4 mb-3 bg-light">
+                        <h5>Status Snapshot</h5>
+                        <dl class="row mb-0">
+                            <dt class="col-5">State</dt>
+                            <dd class="col-7"><span t-field="service_request.state"/></dd>
+                            <dt class="col-5">Priority</dt>
+                            <dd class="col-7"><span t-field="service_request.priority"/></dd>
+                            <dt class="col-5">Tracking</dt>
+                            <dd class="col-7"><span t-field="service_request.name"/></dd>
+                            <dt class="col-5">Deadline</dt>
+                            <dd class="col-7"><span t-field="service_request.sla_deadline"/></dd>
+                            <dt class="col-5">Assigned</dt>
+                            <dd class="col-7"><span t-field="service_request.assigned_user_id"/></dd>
+                        </dl>
+                    </div>
+
+                    <form t-if="service_request.state in ('resolved', 'closed')" t-att-action="'/my/service-requests/%s/feedback' % service_request.id" method="post" class="border rounded-3 p-4 bg-white">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <h5>Feedback</h5>
+                        <label class="form-label" for="rating">Rating</label>
+                        <select id="rating" name="rating" class="form-select mb-2">
+                            <option value="4" t-att-selected="service_request.rating == '4'">Excellent</option>
+                            <option value="3" t-att-selected="service_request.rating == '3'">Good</option>
+                            <option value="2" t-att-selected="service_request.rating == '2'">Average</option>
+                            <option value="1" t-att-selected="service_request.rating == '1'">Poor</option>
+                        </select>
+                        <label class="form-label" for="customer_feedback">Comment</label>
+                        <textarea id="customer_feedback" name="customer_feedback" rows="3" class="form-control"><t t-out="service_request.customer_feedback or ''"/></textarea>
+                        <button type="submit" class="btn btn-primary mt-2">Save Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

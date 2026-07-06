@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_smart_service_sla_list" model="ir.ui.view">
+        <field name="name">smart.service.sla.list</field>
+        <field name="model">smart.service.sla</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="priority"/>
+                <field name="response_hours"/>
+                <field name="resolution_hours"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_smart_service_sla_form" model="ir.ui.view">
+        <field name="name">smart.service.sla.form</field>
+        <field name="model">smart.service.sla</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="response_hours"/>
+                            <field name="resolution_hours"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_smart_service_sla" model="ir.actions.act_window">
+        <field name="name">SLA Policies</field>
+        <field name="res_model">smart.service.sla</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

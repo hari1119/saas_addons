@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Sets sensible defaults on the first company created during installation.
+        noupdate="1" ensures manual customisations survive module upgrades.
+    -->
+    <function model="res.company" name="search_read"
+              eval="[]"
+              context="{'active_test': False}"/>
+</odoo>

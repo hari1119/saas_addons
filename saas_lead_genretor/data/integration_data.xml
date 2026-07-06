@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="utm_source_indiamart" model="utm.source">
+        <field name="name">IndiaMart</field>
+    </record>
+
+    <record id="crm_third_party_indiamart" model="crm.third.party.integration">
+        <field name="name">IndiaMart</field>
+        <field name="source">indiamart</field>
+        <field name="url">https://mapi.indiamart.com/wservce/crm/crmListing/v2/</field>
+        <field name="utm_source_id" ref="utm_source_indiamart"/>
+    </record>
+</odoo>

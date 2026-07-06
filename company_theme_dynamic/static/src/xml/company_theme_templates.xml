@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Company Theme Watcher (invisible mount point)
+    ═══════════════════════════════════════════════════════════════════ -->
+    <t t-name="company_theme_dynamic.CompanyThemeWatcher">
+        <!-- This component has no visual output; it only watches for
+             company changes and re-applies CSS variables. -->
+    </t>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Systray: Colour Dot Indicator
+    ═══════════════════════════════════════════════════════════════════ -->
+    <t t-name="company_theme_dynamic.ThemeSystrayIcon">
+        <li class="o_nav_entry ct-systray-theme" title="Active Company Theme">
+            <span class="ct-systray-dot"
+                  t-att-style="'background:' + state.primary + ';box-shadow: 0 0 6px ' + state.primary"
+            />
+        </li>
+    </t>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         Live Theme Preview Widget
+    ═══════════════════════════════════════════════════════════════════ -->
+    <t t-name="company_theme_dynamic.ThemePreview">
+        <div class="ct-theme-preview-container">
+            <div class="ct-preview-header">
+                <span class="ct-preview-title">🖥️ Live Theme Preview</span>
+                <button class="btn btn-sm ct-refresh-btn"
+                        t-on-click="fetchPreview">↻ Refresh</button>
+            </div>
+
+            <div class="ct-mock-odoo" t-att-style="previewStyle">
+
+                <!-- Mock Topbar -->
+                <div class="ct-mock-topbar">
+                    <div class="ct-mock-logo">⬡</div>
+                    <div class="ct-mock-menu-items">
+                        <span class="ct-mock-menu-item">Sales</span>
+                        <span class="ct-mock-menu-item">CRM</span>
+                        <span class="ct-mock-menu-item">Inventory</span>
+                    </div>
+                    <div class="ct-mock-topbar-actions">
+                        <span class="ct-mock-avatar">A</span>
+                    </div>
+                </div>
+
+                <div class="ct-mock-body">
+                    <!-- Mock Sidebar -->
+                    <div class="ct-mock-sidebar">
+                        <div class="ct-mock-sidebar-item ct-active">📊 Dashboard</div>
+                        <div class="ct-mock-sidebar-item">📋 Orders</div>
+                        <div class="ct-mock-sidebar-item">👥 Customers</div>
+                        <div class="ct-mock-sidebar-item">📦 Products</div>
+                        <div class="ct-mock-sidebar-item">📈 Reports</div>
+                    </div>
+
+                    <!-- Mock Content -->
+                    <div class="ct-mock-content">
+
+                        <!-- Stat Cards -->
+                        <div class="ct-mock-stats">
+                            <div class="ct-mock-stat-card">
+                                <div class="ct-mock-stat-icon" style="background: var(--p-primary)">💰</div>
+                                <div>
+                                    <div class="ct-mock-stat-label">Revenue</div>
+                                    <div class="ct-mock-stat-value">₹4.2L</div>
+                                </div>
+                            </div>
+                            <div class="ct-mock-stat-card">
+                                <div class="ct-mock-stat-icon" style="background: var(--p-secondary)">📦</div>
+                                <div>
+                                    <div class="ct-mock-stat-label">Orders</div>
+                                    <div class="ct-mock-stat-value">1,284</div>
+                                </div>
+                            </div>
+                            <div class="ct-mock-stat-card">
+                                <div class="ct-mock-stat-icon" style="background: var(--p-accent)">⭐</div>
+                                <div>
+                                    <div class="ct-mock-stat-label">Rating</div>
+                                    <div class="ct-mock-stat-value">4.9</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mock Table -->
+                        <div class="ct-mock-table">
+                            <div class="ct-mock-table-header">
+                                <span>Customer</span>
+                                <span>Amount</span>
+                                <span>Status</span>
+                            </div>
+                            <div class="ct-mock-table-row">
+                                <span>Acme Corp</span>
+                                <span>₹28,500</span>
+                                <span class="ct-mock-badge ct-badge-success">Paid</span>
+                            </div>
+                            <div class="ct-mock-table-row">
+                                <span>TechCo Ltd</span>
+                                <span>₹14,200</span>
+                                <span class="ct-mock-badge ct-badge-warning">Pending</span>
+                            </div>
+                            <div class="ct-mock-table-row">
+                                <span>Global Inc</span>
+                                <span>₹67,800</span>
+                                <span class="ct-mock-badge ct-badge-primary">Draft</span>
+                            </div>
+                        </div>
+
+                        <!-- Buttons row -->
+                        <div class="ct-mock-buttons">
+                            <button class="ct-mock-btn ct-btn-primary">Save</button>
+                            <button class="ct-mock-btn ct-btn-secondary">Cancel</button>
+                            <button class="ct-mock-btn ct-btn-accent">New</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

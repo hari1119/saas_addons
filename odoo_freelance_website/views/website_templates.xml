@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="odoo_services_page" name="Odoo Development and Implementation">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Odoo Development and Implementation</t>
+            <div id="wrap" class="ofw_site">
+                <section class="ofw_hero">
+                    <div class="container">
+                        <div class="ofw_hero_grid">
+                            <div class="ofw_hero_copy">
+                                <span class="ofw_kicker">Odoo Community Experts</span>
+                                <h1>Odoo development that feels built for your business.</h1>
+                                <p class="ofw_lead">
+                                    Implementation, customization, migration, reports, integrations, and support for companies that want a practical ERP without enterprise license pressure.
+                                </p>
+                                <div class="ofw_actions">
+                                    <a href="#connect" class="btn ofw_btn_primary">Start a project</a>
+                                    <a href="#services" class="btn ofw_btn_light">View services</a>
+                                </div>
+                                <div class="ofw_metrics" aria-label="Service highlights">
+                                    <div>
+                                        <strong>Community</strong>
+                                        <span>cost-smart builds</span>
+                                    </div>
+                                    <div>
+                                        <strong>Custom</strong>
+                                        <span>workflows and reports</span>
+                                    </div>
+                                    <div>
+                                        <strong>Support</strong>
+                                        <span>after go-live care</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ofw_hero_visual" aria-hidden="true">
+                                <div class="ofw_browser">
+                                    <div class="ofw_browser_bar">
+                                        <span></span><span></span><span></span>
+                                    </div>
+                                    <div class="ofw_browser_body">
+                                        <div class="ofw_sidebar">
+                                            <span></span><span></span><span></span><span></span>
+                                        </div>
+                                        <div class="ofw_dashboard">
+                                            <div class="ofw_dash_header"></div>
+                                            <div class="ofw_chart">
+                                                <i></i><i></i><i></i><i></i><i></i>
+                                            </div>
+                                            <div class="ofw_pipeline">
+                                                <span></span><span></span><span></span>
+                                            </div>
+                                            <div class="ofw_rows">
+                                                <span></span><span></span><span></span><span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="services" class="ofw_section">
+                    <div class="container">
+                        <div class="ofw_section_head">
+                            <span class="ofw_kicker">What I Build</span>
+                            <h2>Community edition, shaped into a real operating system.</h2>
+                        </div>
+                        <div class="ofw_service_grid">
+                            <article class="ofw_service_card">
+                                <i class="fa fa-cubes"></i>
+                                <h3>Implementation</h3>
+                                <p>Sales, purchase, inventory, accounting, HR, projects, and approval flows configured around your process.</p>
+                            </article>
+                            <article class="ofw_service_card">
+                                <i class="fa fa-code"></i>
+                                <h3>Customization</h3>
+                                <p>New models, fields, views, workflows, automations, portals, dashboards, and server actions.</p>
+                            </article>
+                            <article class="ofw_service_card">
+                                <i class="fa fa-plug"></i>
+                                <h3>Integrations</h3>
+                                <p>Payment gateways, APIs, WhatsApp, eCommerce, shipping, external apps, and custom sync jobs.</p>
+                            </article>
+                            <article class="ofw_service_card">
+                                <i class="fa fa-file-text-o"></i>
+                                <h3>Reports</h3>
+                                <p>Pixel-clean QWeb PDFs, Excel exports, business print formats, dashboards, and MIS-style views.</p>
+                            </article>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ofw_band">
+                    <div class="container">
+                        <div class="ofw_process">
+                            <div>
+                                <span>01</span>
+                                <h3>Discover</h3>
+                                <p>Understand users, current documents, approvals, exceptions, and reporting pain points.</p>
+                            </div>
+                            <div>
+                                <span>02</span>
+                                <h3>Configure</h3>
+                                <p>Set up Odoo Community modules, security, data, email, templates, and business rules.</p>
+                            </div>
+                            <div>
+                                <span>03</span>
+                                <h3>Customize</h3>
+                                <p>Build the missing pieces cleanly as Odoo modules with upgrade-friendly code.</p>
+                            </div>
+                            <div>
+                                <span>04</span>
+                                <h3>Go live</h3>
+                                <p>Train users, migrate opening data, stabilize operations, and improve after launch.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="connect" class="ofw_section ofw_contact_section">
+                    <div class="container">
+                        <div class="ofw_contact_grid">
+                            <div class="ofw_contact_copy">
+                                <span class="ofw_kicker">Connect</span>
+                                <h2>Tell me what you want Odoo to handle.</h2>
+                                <p>
+                                    Share the business area, current pain point, timeline, and the level of customization you need. Your message will be stored as a CRM lead in Odoo.
+                                </p>
+                                <ul class="ofw_checklist">
+                                    <li><i class="fa fa-check"></i> Odoo Community implementation</li>
+                                    <li><i class="fa fa-check"></i> Existing Odoo customization and bug fixing</li>
+                                    <li><i class="fa fa-check"></i> Reports, integrations, portals, and automations</li>
+                                </ul>
+                            </div>
+                            <form class="ofw_form" action="/odoo-services/lead" method="post">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <t t-if="request.params.get('lead_error')">
+                                    <div class="alert alert-warning" role="alert">Please enter a valid name and email.</div>
+                                </t>
+                                <div class="ofw_form_row">
+                                    <label for="ofw_name">Name</label>
+                                    <input id="ofw_name" name="contact_name" type="text" required="required" autocomplete="name"/>
+                                </div>
+                                <div class="ofw_form_row">
+                                    <label for="ofw_email">Email</label>
+                                    <input id="ofw_email" name="email_from" type="email" required="required" autocomplete="email"/>
+                                </div>
+                                <div class="ofw_form_split">
+                                    <div class="ofw_form_row">
+                                        <label for="ofw_phone">Phone</label>
+                                        <input id="ofw_phone" name="phone" type="tel" autocomplete="tel"/>
+                                    </div>
+                                    <div class="ofw_form_row">
+                                        <label for="ofw_company">Company</label>
+                                        <input id="ofw_company" name="partner_name" type="text" autocomplete="organization"/>
+                                    </div>
+                                </div>
+                                <div class="ofw_form_split">
+                                    <div class="ofw_form_row">
+                                        <label for="ofw_project">Need</label>
+                                        <select id="ofw_project" name="project_type">
+                                            <option>Odoo Implementation</option>
+                                            <option>Odoo Customization</option>
+                                            <option>Migration or Upgrade</option>
+                                            <option>Reports and PDF Templates</option>
+                                            <option>Integration</option>
+                                            <option>Support and Bug Fixing</option>
+                                        </select>
+                                    </div>
+                                    <div class="ofw_form_row">
+                                        <label for="ofw_version">Version</label>
+                                        <select id="ofw_version" name="odoo_version">
+                                            <option>Odoo Community</option>
+                                            <option>Odoo 19</option>
+                                            <option>Odoo 18</option>
+                                            <option>Odoo 17</option>
+                                            <option>Older version</option>
+                                            <option>Not sure</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="ofw_form_split">
+                                    <div class="ofw_form_row">
+                                        <label for="ofw_budget">Budget</label>
+                                        <select id="ofw_budget" name="budget_range">
+                                            <option>Need estimate</option>
+                                            <option>Small customization</option>
+                                            <option>Monthly support</option>
+                                            <option>Implementation project</option>
+                                            <option>Long-term development</option>
+                                        </select>
+                                    </div>
+                                    <div class="ofw_form_row">
+                                        <label for="ofw_timeline">Timeline</label>
+                                        <select id="ofw_timeline" name="timeline">
+                                            <option>As soon as possible</option>
+                                            <option>This week</option>
+                                            <option>This month</option>
+                                            <option>Planning stage</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="ofw_form_row">
+                                    <label for="ofw_message">Project details</label>
+                                    <textarea id="ofw_message" name="description" rows="5" required="required"></textarea>
+                                </div>
+                                <button class="btn ofw_btn_primary ofw_submit" type="submit">
+                                    <span>Send enquiry</span>
+                                    <i class="fa fa-arrow-right"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="odoo_services_thank_you_page" name="Odoo Services Thank You">
+        <t t-call="website.layout">
+            <t t-set="additional_title">Thank You</t>
+            <div id="wrap" class="ofw_site">
+                <section class="ofw_thanks">
+                    <div class="container">
+                        <div class="ofw_thanks_panel">
+                            <i class="fa fa-check"></i>
+                            <h1>Thank you. Your enquiry is in Odoo CRM.</h1>
+                            <p>I will review your requirement and get back to you soon.</p>
+                            <a class="btn ofw_btn_primary" href="/odoo-services">Back to services</a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <record id="page_odoo_services" model="website.page">
+        <field name="name">Odoo Services</field>
+        <field name="url">/odoo-services</field>
+        <field name="is_published">True</field>
+        <field name="view_id" ref="odoo_services_page"/>
+        <field name="track">True</field>
+        <field name="website_meta_title">Odoo Community Development and Implementation</field>
+        <field name="website_meta_description">Freelance Odoo Community development, implementation, customization, migration, reports, integrations, and support.</field>
+    </record>
+
+    <record id="page_odoo_services_thank_you" model="website.page">
+        <field name="name">Odoo Services Thank You</field>
+        <field name="url">/odoo-services/thank-you</field>
+        <field name="is_published">True</field>
+        <field name="website_indexed">False</field>
+        <field name="view_id" ref="odoo_services_thank_you_page"/>
+    </record>
+
+    <record id="menu_odoo_services" model="website.menu">
+        <field name="name">Odoo Services</field>
+        <field name="url">/odoo-services</field>
+        <field name="page_id" ref="page_odoo_services"/>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">25</field>
+    </record>
+</odoo>
